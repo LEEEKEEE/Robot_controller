@@ -9,13 +9,15 @@ import 'dart:math';
 import 'dart:async';
 
 class GlobalVariables {
-  static bool Community_Connect = false;
   static String Item_name = "";
+  static String btdevice_name = "";
+  static String btdevice_adress = "";
   static double Item_X = 0.0;
   static double Item_Y = 0.0;
   static double Item_Z = 0.0;
-  static bool Arm_Error = false;
-
+  static ValueNotifier<bool> communityConnect = ValueNotifier<bool>(false);
+  static ValueNotifier<bool> armError = ValueNotifier<bool>(false);
+  static ValueNotifier<String> btdeviceNameNotifier = ValueNotifier<String>("");
   static bool isWifiConnected = false;
   static bool isURLConnected = false;
   static String Network_URL = "";
@@ -108,7 +110,7 @@ class MessageView {
     Overlay.of(context).insert(overlayEntry);
 
     // 일정 시간 후에 Overlay를 제거합니다.
-    Future.delayed(const Duration(milliseconds: 700), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       overlayEntry.remove();
     });
   }

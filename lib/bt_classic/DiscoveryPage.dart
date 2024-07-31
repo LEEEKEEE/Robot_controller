@@ -4,6 +4,7 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart'; // Blue
 
 import './BluetoothDeviceListEntry.dart'; // 블루투스 장치 목록 항목 위젯
 import './bluetoothmanager.dart';
+import 'package:robotarm_controller/global.dart';
 
 // 블루투스 장치 검색 페이지를 나타내는 StatefulWidget 클래스
 class DiscoveryPage extends StatefulWidget {
@@ -169,6 +170,14 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                           );
                         },
                       );
+                      setState(() {
+                        GlobalVariables.communityConnect.value = true;
+                        GlobalVariables.btdevice_name =
+                            device.name ?? 'Unknown';
+                        GlobalVariables.btdeviceNameNotifier.value =
+                            device.name ?? 'Unknown';
+                        GlobalVariables.btdevice_adress = device.address;
+                      });
                     }
                   } else {
                     if (mounted) {

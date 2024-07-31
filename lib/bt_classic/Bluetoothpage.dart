@@ -5,8 +5,8 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import './DiscoveryPage.dart';
 import './SelectBondedDevicePage.dart';
-
-// import './helpers/LineChart.dart';
+import './bluetoothmanager.dart';
+import 'package:robotarm_controller/global.dart';
 
 class BluetoothPage extends StatefulWidget {
   const BluetoothPage({super.key});
@@ -17,7 +17,7 @@ class BluetoothPage extends StatefulWidget {
 
 class _BluetoothPage extends State<BluetoothPage> {
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
-
+  final BluetoothManager _bluetoothManager = BluetoothManager();
   String _address = "...";
   String _name = "...";
 
@@ -179,9 +179,14 @@ class _BluetoothPage extends State<BluetoothPage> {
               ),
             ),
             const Divider(),
-            const ListTile(
-              title: Text('Devices discovery and connection'),
-              subtitle: Text("d"),
+            ListTile(
+              title: const Text('Devices discovery and connection'),
+              subtitle: ValueListenableBuilder<String>(
+                valueListenable: GlobalVariables.btdeviceNameNotifier,
+                builder: (context, value, child) {
+                  return Text(value.isEmpty ? "No device connected" : value);
+                },
+              ),
             ),
             ListTile(
               title: ElevatedButton(
@@ -222,6 +227,27 @@ class _BluetoothPage extends State<BluetoothPage> {
                   } else {
                     print('Connect -> no device selected');
                   }
+                },
+              ),
+            ),
+            ListTile(
+              title: ElevatedButton(
+                child: const Text(
+                  'Disconnect',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 228, 58, 58),
+                  ),
+                ),
+                onPressed: () async {
+                  _bluetoothManager
+                      .disconnectdevice(GlobalVariables.btdevice_adress);
+
+                  setState(() {
+                    GlobalVariables.communityConnect.value = false;
+                    GlobalVariables.btdevice_name = "";
+                    GlobalVariables.btdevice_adress = "";
+                    GlobalVariables.btdeviceNameNotifier.value = "";
+                  });
                 },
               ),
             ),

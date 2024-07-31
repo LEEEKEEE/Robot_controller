@@ -92,59 +92,57 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
               ),
             ),
           ),
-          Container(
-            width: (sizeHeight * 0.1),
-            height: (sizeHeight * 0.1),
-            margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(sizeHeight * 0.1),
-              color: const Color(0xFF646667),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x40000000),
-                  offset: Offset(0, 4),
-                  blurRadius: 2,
+          ValueListenableBuilder<bool>(
+            valueListenable: GlobalVariables.communityConnect,
+            builder: (context, communityConnect, _) {
+              return Container(
+                width: (sizeHeight * 0.1),
+                height: (sizeHeight * 0.1),
+                margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(sizeHeight * 0.1),
+                  color: communityConnect
+                      ? const Color.fromARGB(255, 63, 105, 255)
+                      : const Color(0xFF646667),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x40000000),
+                      offset: Offset(0, 4),
+                      blurRadius: 2,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Center(
-              child: GestureDetector(
-                onTap: () {
-                  Haptics.vibrate(HapticsType.light);
-                  setState(() {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return const BluetoothPage();
-                      } // SettingView로 이동
-                          ),
-                    );
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      Haptics.vibrate(HapticsType.light);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return const BluetoothPage();
+                        }),
+                      );
 
-                    GlobalVariables.Community_Connect =
-                        !GlobalVariables.Community_Connect;
-                    if (GlobalVariables.Community_Connect) {
-                      GlobalVariables.Arm_Error = true;
-                      print(GlobalVariables.Community_Connect);
-                    } else {
-                      GlobalVariables.Arm_Error = false;
-                    }
-                  });
-                },
-                child: Icon(
-                  GlobalVariables.Community_Connect
-                      ? Icons.link
-                      : Icons.link_off,
-                  size: sizeHeight * 0.07,
+                      GlobalVariables.armError.value =
+                          communityConnect ? true : false;
+                    },
+                    child: Icon(
+                      communityConnect
+                          ? Icons.bluetooth_connected
+                          : Icons.bluetooth,
+                      size: sizeHeight * 0.07,
+                    ),
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
           Container(
             width: (sizeHeight * 0.1),
             height: (sizeHeight * 0.1),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(sizeHeight * 0.1),
-              color: GlobalVariables.Arm_Error
+              color: GlobalVariables.armError.value
                   ? const Color.fromARGB(255, 110, 232, 141)
                   : const Color(0xFFE86E6E),
               boxShadow: const [

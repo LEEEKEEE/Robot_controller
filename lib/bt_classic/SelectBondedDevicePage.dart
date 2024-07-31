@@ -5,6 +5,7 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import './BluetoothDeviceListEntry.dart';
 import './bluetoothmanager.dart';
+import 'package:robotarm_controller/global.dart';
 
 class SelectBondedDevicePage extends StatefulWidget {
   /// If true, on page start there is performed discovery upon the bonded devices.
@@ -110,6 +111,27 @@ class _SelectBondedDevicePage extends State<SelectBondedDevicePage> {
     super.dispose();
   }
 
+  Future<void> _showResultDialog(BuildContext context, bool isConnected) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(isConnected ? 'Connect succeeded.' : 'Connect failed.'),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Close'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     List<BluetoothDeviceListEntry> list = devices
@@ -123,48 +145,18 @@ class _SelectBondedDevicePage extends State<SelectBondedDevicePage> {
                 print(
                     'Connected to ${device.device.address} has ${isConnected ? 'succeeded' : 'failed'}');
 
+                // Show result dialog based on connection status
+                await _showResultDialog(context, isConnected);
+
                 if (isConnected) {
-                  if (mounted) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text('Connect succeeded.'),
-                              ElevatedButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(), // 팝업 닫기
-                                child: const Text('Close'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  }
-                } else {
-                  if (mounted) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text('Connect failed.'),
-                              ElevatedButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(), // 팝업 닫기
-                                child: const Text('Close'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  }
+                  setState(() {
+                    GlobalVariables.communityConnect.value = true;
+                    GlobalVariables.btdevice_name =
+                        device.device.name ?? 'Unknown';
+                    GlobalVariables.btdeviceNameNotifier.value =
+                        device.device.name ?? 'Unknown';
+                    GlobalVariables.btdevice_adress = device.device.address;
+                  });
                 }
               },
             ))

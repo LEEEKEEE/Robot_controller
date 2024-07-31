@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
+import 'package:robotarm_controller/global.dart';
+
 class BluetoothManager {
   static final BluetoothManager _instance = BluetoothManager._internal();
   BluetoothConnection? _connection;
-  BluetoothDevice? _connectedDevice;
   StreamSubscription<BluetoothState>? _stateSubscription;
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
   Function(BluetoothState)? onStateChanged;
-
-  Function(String)? onDeviceNameChanged;
 
   BluetoothManager._internal() {
     _stateSubscription = FlutterBluetoothSerial.instance
@@ -36,9 +35,10 @@ class BluetoothManager {
     try {
       final BluetoothState state = await FlutterBluetoothSerial.instance.state;
       if (state != BluetoothState.STATE_ON) {
-        print('Bluetooth is not enabled');
+        print('Bluetooth is not enabled.');
         return false;
       }
+
       _connection = await BluetoothConnection.toAddress(address);
       print('Connected to the device');
       return true;
@@ -63,16 +63,19 @@ class BluetoothManager {
     }
   }
 
+  Future<bool> disconnectdevice(String address) async {
+    if (_connection != null) {
+      await disconnect();
+    }
+    return false;
+  }
+
   Future<void> disconnect() async {
     await _connection?.close();
     _connection = null;
   }
 
   BluetoothState get bluetoothState => _bluetoothState;
-
-  String get connectedDeviceName {
-    return _connectedDevice?.name ?? "No device connected";
-  }
 
   void dispose() {
     _stateSubscription?.cancel();
