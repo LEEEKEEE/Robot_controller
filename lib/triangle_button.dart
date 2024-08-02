@@ -28,6 +28,10 @@ Widget buildTriangleButton(
         timer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
           MessageView.showOverlayMessage(
               context, size, "Sending signal for $num");
+
+          // setState(() {
+          //   SetTxData.pressed_btn_num = num;
+          // });
         });
       }
 
@@ -37,11 +41,12 @@ Widget buildTriangleButton(
 
       return GestureDetector(
         onTapDown: (_) {
+          MessageView.showOverlayMessage(
+              context, size, "Sending signal for $num");
           startForwardSignal();
         },
         onTapUp: (_) {
           stopForwardSignal();
-          MessageView.showOverlayMessage(context, size, "Button released");
         },
         onTapCancel: () {
           stopForwardSignal();
@@ -70,20 +75,36 @@ Widget buildTriangleButton(
               // 버튼이 눌렸을 때의 동작 설정
               switch (num) {
                 case 0:
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
                   break;
                 case 1:
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
                   break;
                 case 2:
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
                   break;
                 case 3:
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
                   break;
                 case 4:
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
                   break;
                 case 5:
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
                   break;
                 case 6:
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
                   break;
                 case 7:
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
                   break;
               }
             },

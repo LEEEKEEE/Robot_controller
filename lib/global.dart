@@ -20,7 +20,37 @@ class GlobalVariables {
   static ValueNotifier<String> btdeviceNameNotifier = ValueNotifier<String>("");
   static bool isWifiConnected = false;
   static bool isURLConnected = false;
+  static bool isBTConnected = false;
   static String Network_URL = "";
+}
+
+class SetTxData {
+  // static List<int> TxData = List<int>.filled(1, 0);
+  // static List<int> TxData = List<int>.filled(27, 0);
+
+  static int pressed_btn_num = 0;
+}
+
+class SetRxData {
+  static List<int> RxData = List<int>.filled(38, 0);
+
+  static int Corner_Mode = 0;
+  static int Mode_Disable_Button_Blink = 0;
+  static int Corner_Mode_Disable_Button = 0;
+  static int Measured_Steer_Angle_Fl = 0;
+  static int Target_Steer_Current_Fl = 0;
+  static int Measured_Steer_Current_Fl = 0;
+  static int Measured_Steer_Angle_Fr = 0;
+  static int Target_Steer_Current_Fr = 0;
+  static int Measured_Steer_Current_Fr = 0;
+  static int Measured_Steer_Angle_Rl = 0;
+  static int Target_Steer_Current_Rl = 0;
+  static int Measured_Steer_Current_Rl = 0;
+  static int Measured_Steer_Angle_Rr = 0;
+  static int Target_Steer_Current_Rr = 0;
+  static int Measured_Steer_Current_Rr = 0;
+  static int Vehicle_Speed = 0;
+  static int Battery_Soc = 0;
 }
 
 class MessageView {
@@ -110,7 +140,7 @@ class MessageView {
     Overlay.of(context).insert(overlayEntry);
 
     // 일정 시간 후에 Overlay를 제거합니다.
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 150), () {
       overlayEntry.remove();
     });
   }
@@ -156,7 +186,8 @@ class MessageView {
 class CameraViewModel extends ChangeNotifier {
   Offset? _touchPosition;
   String _touchPositionText = '';
-  String _networkURL = "rtsp://210.99.70.120:1935/live/cctv003.stream";
+  String _networkURL =
+      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
   Offset? get touchPosition => _touchPosition;
   String get touchPositionText => _touchPositionText;

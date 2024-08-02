@@ -148,6 +148,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                 if (bonded) {
                   bool isConnected =
                       await _bluetoothManager.connect(address); // 연결 시도
+
                   print(
                       'Connected to ${device.address} has ${isConnected ? 'succeeded' : 'failed'}');
                   if (isConnected) {

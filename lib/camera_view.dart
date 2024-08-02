@@ -16,7 +16,8 @@ class CameraView extends StatefulWidget {
 
 class _CameraViewState extends State<CameraView> {
   late VlcPlayerController _vlcController;
-  String _previousNetworkURL = "rtsp://210.99.70.120:1935/live/cctv003.stream";
+  String _previousNetworkURL =
+      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
   @override
   void initState() {

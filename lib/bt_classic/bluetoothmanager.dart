@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:robotarm_controller/global.dart';
 
@@ -49,9 +51,11 @@ class BluetoothManager {
       bool reconnected = false;
       for (int i = 0; i < 3; i++) {
         print('Retrying connection (${i + 1}/3)...');
+
         await Future.delayed(const Duration(seconds: 2)); // 재시도 전 대기
         try {
           _connection = await BluetoothConnection.toAddress(address);
+
           print('Reconnected to the device');
           reconnected = true;
           break;
@@ -81,5 +85,28 @@ class BluetoothManager {
     _stateSubscription?.cancel();
     disconnect();
     _connection = null; // Dispose 후 null로 설정
+  }
+
+  Future<void> sendMessage(List<int> message) async {
+    if (_connection != null && _connection!.isConnected) {
+      message = TxData_Check(message);
+      _connection!.output.add(Uint8List.fromList(message));
+      _connection!.output.allSent;
+      print('Data sent: $message');
+    }
+  }
+
+  void listenForMessages(Function(String) onDataReceived) {
+    if (_connection != null && _connection!.isConnected) {
+      _connection!.input?.listen((Uint8List data) {
+        String message = String.fromCharCodes(data);
+        onDataReceived(message);
+      });
+    }
+  }
+
+  List<int> TxData_Check(List<int> Data) {
+    Data[1] = (SetTxData.pressed_btn_num & 0xFF);
+    return Data;
   }
 }

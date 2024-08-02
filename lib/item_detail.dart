@@ -85,7 +85,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                 child: ElevatedButton(
                   onPressed: () {
                     MessageView.showOverlayMessage(context, sizeHeight,
-                        "Select버튼 클릭"); // 버튼 클릭 시 메시지 오버레이를 표시합니다.
+                        "Add to cart버튼 클릭"); // 버튼 클릭 시 메시지 오버레이를 표시합니다.
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF646667), // 버튼 색상
@@ -99,7 +99,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                     width: (sizeWidth * 0.2), // 화면 너비의 20%로 너비 설정
                     alignment: Alignment.center,
                     child: Text(
-                      'Select',
+                      'Add to cart',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: (sizeWidth * 0.025), // 화면 너비의 2.5%로 폰트 크기 설정

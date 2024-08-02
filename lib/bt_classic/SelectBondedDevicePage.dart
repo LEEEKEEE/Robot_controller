@@ -151,6 +151,7 @@ class _SelectBondedDevicePage extends State<SelectBondedDevicePage> {
                 if (isConnected) {
                   setState(() {
                     GlobalVariables.communityConnect.value = true;
+                    GlobalVariables.isBTConnected = true;
                     GlobalVariables.btdevice_name =
                         device.device.name ?? 'Unknown';
                     GlobalVariables.btdeviceNameNotifier.value =

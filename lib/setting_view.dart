@@ -94,7 +94,7 @@ class _SettingViewState extends State<SettingView> {
                                           color: const Color(0xFF2A2A2A)),
                                       decoration: const InputDecoration(
                                           hintText:
-                                              'Streaming URL(Def.http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4)',
+                                              'Streaming URL(Def.rtp://192.168.35.129:5000)',
                                           hintStyle: TextStyle(
                                             color: Color.fromARGB(
                                                 255, 162, 162, 162),
@@ -134,7 +134,7 @@ class _SettingViewState extends State<SettingView> {
                                                 .Network_URL = URLController
                                                     .text.isNotEmpty
                                                 ? URLController.text
-                                                : "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+                                                : "rtp://192.168.35.129:5000";
                                             Provider.of<CameraViewModel>(
                                                     context,
                                                     listen: false)
