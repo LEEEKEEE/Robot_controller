@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import './global.dart';
+import 'bt_classic/bluetoothmanager.dart';
 
 void showOverlayMessage(BuildContext context, double size, String message) {
   final snackBar = SnackBar(content: Text(message));
@@ -22,6 +23,7 @@ Widget buildTriangleButton(
   return StatefulBuilder(
     builder: (context, setState) {
       Timer? timer;
+      final bluetoothManager = BluetoothManager();
 
       void startForwardSignal() {
         timer?.cancel();
@@ -29,9 +31,11 @@ Widget buildTriangleButton(
           MessageView.showOverlayMessage(
               context, size, "Sending signal for $num");
 
-          // setState(() {
+          //setState(() {
           //   SetTxData.pressed_btn_num = num;
-          // });
+          //  });
+
+          bluetoothManager.sendMessage([num]);
         });
       }
 
@@ -77,34 +81,42 @@ Widget buildTriangleButton(
                 case 0:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  bluetoothManager.sendMessage([num]);
                   break;
                 case 1:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  bluetoothManager.sendMessage([num]);
                   break;
                 case 2:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  bluetoothManager.sendMessage([num]);
                   break;
                 case 3:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  bluetoothManager.sendMessage([num]);
                   break;
                 case 4:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  bluetoothManager.sendMessage([num]);
                   break;
                 case 5:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  bluetoothManager.sendMessage([num]);
                   break;
                 case 6:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  bluetoothManager.sendMessage([num]);
                   break;
                 case 7:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  bluetoothManager.sendMessage([num]);
                   break;
               }
             },

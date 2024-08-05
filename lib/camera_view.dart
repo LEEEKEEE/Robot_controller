@@ -59,6 +59,9 @@ class _CameraViewState extends State<CameraView> {
         advanced: VlcAdvancedOptions([
           VlcAdvancedOptions.networkCaching(1000),
         ]),
+        rtp: VlcRtpOptions([
+          VlcRtpOptions.rtpOverRtsp(false),
+        ]),
       ),
     );
   }

@@ -94,7 +94,7 @@ class _SettingViewState extends State<SettingView> {
                                           color: const Color(0xFF2A2A2A)),
                                       decoration: const InputDecoration(
                                           hintText:
-                                              'Streaming URL(Def.rtp://192.168.35.129:5000)',
+                                              'Streaming URL(Def.rtp://@:5000)',
                                           hintStyle: TextStyle(
                                             color: Color.fromARGB(
                                                 255, 162, 162, 162),
@@ -130,11 +130,10 @@ class _SettingViewState extends State<SettingView> {
                                           onPressed: () {
                                             Haptics.vibrate(HapticsType.light);
 
-                                            GlobalVariables
-                                                .Network_URL = URLController
-                                                    .text.isNotEmpty
-                                                ? URLController.text
-                                                : "rtp://192.168.35.129:5000";
+                                            GlobalVariables.Network_URL =
+                                                URLController.text.isNotEmpty
+                                                    ? URLController.text
+                                                    : "rtp://@:5000";
                                             Provider.of<CameraViewModel>(
                                                     context,
                                                     listen: false)

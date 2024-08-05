@@ -91,7 +91,7 @@ class BluetoothManager {
     if (_connection != null && _connection!.isConnected) {
       message = TxData_Check(message);
       _connection!.output.add(Uint8List.fromList(message));
-      _connection!.output.allSent;
+      await _connection!.output.allSent; // 비동기 전송 완료 대기
       print('Data sent: $message');
     }
   }
@@ -105,8 +105,10 @@ class BluetoothManager {
     }
   }
 
-  List<int> TxData_Check(List<int> Data) {
-    Data[1] = (SetTxData.pressed_btn_num & 0xFF);
-    return Data;
+  List<int> TxData_Check(List<int> data) {
+    if (data.length > 1) {
+      data[1] = (SetTxData.pressed_btn_num & 0xFF);
+    }
+    return data;
   }
 }
