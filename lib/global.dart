@@ -22,13 +22,36 @@ class GlobalVariables {
   static bool isURLConnected = false;
   static bool isBTConnected = false;
   static String Network_URL = "";
+
+  static bool isUDPConnected = false;
+  static String PADIp = "";
+  static int PADPort = 0;
+  static String TargetIp = "";
+  static int TargetPort = 0;
 }
 
 class SetTxData {
-  // static List<int> TxData = List<int>.filled(1, 0);
+  static List<int> TxData = List<int>.filled(15, 0);
   // static List<int> TxData = List<int>.filled(27, 0);
 
-  static int pressed_btn_num = 0;
+  static int Msg2_SBW_Cmd_Tx = 0;
+  static int Accel_Pedal_Angle = 0;
+  static int Button_Pedal = 0;
+  static int Joystick_Input_Left_X = 0;
+  static int Joystick_Input_Left_Y = 0;
+  static int Joystick_Input_Right_X = 0;
+  static int Joystick_Input_Right_Y = 0;
+  static int Drive_Mode_Switch = 0;
+  static bool Flag_Pivot = false;
+  static int Flag_Pivot_Num = 0;
+  static int Pivot_Rcx = 0;
+  static int Pivot_Rcy = 0;
+  static int Accel_X = 0;
+  static int Accel_Y = 0;
+  static int Accel_Z = 0;
+  static int Gyro_Y = 0;
+  static int Gyro_P = 0;
+  static int Gyro_R = 0;
 }
 
 class SetRxData {

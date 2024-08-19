@@ -3,7 +3,6 @@ import 'package:haptic_feedback/haptic_feedback.dart';
 
 import './global.dart';
 import './setting_view.dart';
-import './bt_classic/Bluetoothpage.dart';
 
 class MenuButtonSection extends StatefulWidget {
   final double Size_Height;
@@ -119,7 +118,7 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {
-                          return const BluetoothPage();
+                          return const SettingView();
                         }),
                       );
 

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import './global.dart';
-import 'bt_classic/bluetoothmanager.dart';
 
 void showOverlayMessage(BuildContext context, double size, String message) {
   final snackBar = SnackBar(content: Text(message));
@@ -24,7 +23,6 @@ Widget buildTriangleButton(
   return StatefulBuilder(
     builder: (context, setState) {
       Timer? timer;
-      final bluetoothManager = BluetoothManager();
 
       void startForwardSignal() {
         timer?.cancel();
@@ -80,9 +78,6 @@ Widget buildTriangleButton(
                 case 0:
                   //  MessageView.showOverlayMessage(
                   //      context, size, "Sending signal for $num");
-                  bluetoothManager.connection?.output
-                      .add(utf8.encode("test" "\r\n"));
-                  bluetoothManager.connection?.output.allSent;
 
                   break;
                 case 1:
