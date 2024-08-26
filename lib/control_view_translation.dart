@@ -50,14 +50,26 @@ class _CameraViewTranslationControlsState
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildTriangleButton(context, sizeHeight, 0.1, 0.15, true,
+                          true, false, false, 6),
+                      SizedBox(height: sizeHeight * 0.008),
+                      SizedBox(height: sizeHeight * 0.008),
+                      buildTriangleButton(context, sizeHeight, 0.1, 0.15, false,
+                          false, true, true, 7),
+                    ],
+                  ),
+                  SizedBox(width: sizeHeight * 0.05),
                   buildTriangleButton(context, sizeHeight, 0.15, 0.1, true,
-                      false, true, false, 4),
+                      false, true, false, 8),
                   SizedBox(width: sizeHeight * 0.008),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       buildTriangleButton(context, sizeHeight, 0.1, 0.15, true,
-                          true, false, false, 5),
+                          true, false, false, 9),
                       SizedBox(height: sizeHeight * 0.008),
                       Container(
                         width: sizeHeight * 0.08,
@@ -78,12 +90,12 @@ class _CameraViewTranslationControlsState
                       ),
                       SizedBox(height: sizeHeight * 0.008),
                       buildTriangleButton(context, sizeHeight, 0.1, 0.15, false,
-                          false, true, true, 7),
+                          false, true, true, 11),
                     ],
                   ),
                   SizedBox(width: sizeHeight * 0.008),
                   buildTriangleButton(context, sizeHeight, 0.15, 0.1, false,
-                      true, false, true, 6),
+                      true, false, true, 10),
                 ],
               ),
             ],

@@ -4,6 +4,8 @@ import 'package:haptic_feedback/haptic_feedback.dart';
 import './global.dart';
 import './setting_view.dart';
 
+import './Network_config.dart';
+
 class MenuButtonSection extends StatefulWidget {
   final double Size_Height;
   final double Size_Width;
@@ -92,17 +94,15 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
             ),
           ),
           ValueListenableBuilder<bool>(
-            valueListenable: GlobalVariables.communityConnect,
-            builder: (context, communityConnect, _) {
+            valueListenable: GlobalVariables.isTCPConnected,
+            builder: (context, isTCPConnected, _) {
               return Container(
                 width: (sizeHeight * 0.1),
                 height: (sizeHeight * 0.1),
                 margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(sizeHeight * 0.1),
-                  color: communityConnect
-                      ? const Color.fromARGB(255, 63, 105, 255)
-                      : const Color(0xFF646667),
+                  color: const Color(0xFF646667),
                   boxShadow: const [
                     BoxShadow(
                       color: Color(0x40000000),
@@ -113,22 +113,17 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
                 ),
                 child: Center(
                   child: GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       Haptics.vibrate(HapticsType.light);
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {
-                          return const SettingView();
+                          return const NetworkConfig();
                         }),
                       );
-
-                      GlobalVariables.armError.value =
-                          communityConnect ? true : false;
                     },
                     child: Icon(
-                      communityConnect
-                          ? Icons.bluetooth_connected
-                          : Icons.bluetooth,
+                      isTCPConnected ? Icons.link : Icons.link_off,
                       size: sizeHeight * 0.07,
                     ),
                   ),
@@ -151,6 +146,34 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
                   blurRadius: 2,
                 ),
               ],
+            ),
+          ),
+          SizedBox(
+            width: (sizeHeight * 0.1),
+            height: (sizeHeight * 0.1),
+          ),
+          Container(
+            width: (sizeHeight * 0.1),
+            height: (sizeHeight * 0.1),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(sizeHeight * 0.1),
+              color: const Color(0xFF646667),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x40000000),
+                  offset: Offset(0, 4),
+                  blurRadius: 2,
+                ),
+              ],
+            ),
+            child: Center(
+              child: GestureDetector(
+                onTap: () async {},
+                child: Icon(
+                  Icons.power_settings_new,
+                  size: sizeHeight * 0.07,
+                ),
+              ),
             ),
           ),
         ],

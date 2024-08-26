@@ -16,6 +16,7 @@ import 'triangle_button.dart';
 import './camera_view.dart';
 import './item_detail.dart';
 import './permission.dart';
+import './pose_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진의 바인딩을 보장합니다.
@@ -54,6 +55,7 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> with TickerProviderStateMixin {
   final currentDate = DateTime.now(); // 현재 날짜를 가져옵니다.
+  late TimerMonitor _TimerMonitor;
 
   @override
   void initState() {
@@ -64,6 +66,14 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
     // 시스템 UI 모드를 수동으로 설정하여 상단 UI만 표시합니다.
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
+
+    _TimerMonitor = TimerMonitor();
+    _TimerMonitor.startMonitoring();
+    _TimerMonitor.wifiStream.listen((isConnected) {
+      setState(() {
+        GlobalVariables.isWifiConnected = isConnected;
+      });
+    });
 
     _initApp();
   }
@@ -122,12 +132,30 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
                             Size_Width: sizeWidth, // 화면 너비 전달
                           ),
                           // 카메라 앵글 조절
-                          CameraAngleControls(
-                            Size_Height: sizeHeight, // 화면 높이 전달
-                            Size_Width: sizeWidth, // 화면 너비 전달
-                            buildTriangleButton:
-                                buildTriangleButton, // 삼각형 버튼 빌더 전달
-                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment
+                                  .start, // Row의 자식 위젯을 왼쪽으로 정렬
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 3, // 오른쪽 부분의 비율을 설정
+                                  child: PoseControls(
+                                    Size_Height: sizeHeight, // 화면 높이 전달
+                                    Size_Width: sizeWidth, // 화면 너비 전달
+                                    buildTriangleButton:
+                                        buildTriangleButton, // 삼각형 버튼 빌더 전달
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 7, // 왼쪽 부분의 비율을 설정
+                                  child: CameraAngleControls(
+                                    Size_Height: sizeHeight, // 화면 높이 전달
+                                    Size_Width: sizeWidth, // 화면 너비 전달
+                                    buildTriangleButton:
+                                        buildTriangleButton, // 삼각형 버튼 빌더 전달
+                                  ),
+                                ),
+                              ]),
                           // 카메라 뷰 번역 조절
                           CameraViewTranslationControls(
                             Size_Height: sizeHeight, // 화면 높이 전달

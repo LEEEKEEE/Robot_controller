@@ -31,7 +31,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
-  flutter_bluetooth_serial: ^0.4.0
+
+  connectivity: ^3.0.6
   flutter_vlc_player: ^7.4.2
   haptic_feedback: ^0.5.1+1
   permission_handler: ^11.3.1

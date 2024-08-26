@@ -25,48 +25,47 @@ class _ItemDetailsState extends State<ItemDetails> {
   @override
   Widget build(BuildContext context) {
     // 위젯의 UI를 구축하는 메서드입니다.
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-          child: Row(
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+            child: Text(
+              '상품명 :',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: (sizeWidth * 0.025), // 화면 너비의 2.5%로 폰트 크기 설정
+                color: const Color(0xFFF3F3F3),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFFFF),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+              height: sizeHeight * 0.21, // 화면 높이의 21%로 높이 설정
+              alignment: Alignment.centerLeft,
+              child: Text(
+                GlobalVariables.Item_name, // GlobalVariables에서 가져온 상품명
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: sizeWidth * 0.02, // 화면 너비의 2%로 폰트 크기 설정
+                  color: const Color(0xFF646667),
+                ),
+              ),
+            ),
+          ),
+          Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                child: Text(
-                  '상품명 :',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: (sizeWidth * 0.025), // 화면 너비의 2.5%로 폰트 크기 설정
-                    color: const Color(0xFFF3F3F3),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                  height: sizeHeight * 0.1, // 화면 높이의 10%로 높이 설정
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    GlobalVariables.Item_name, // GlobalVariables에서 가져온 상품명
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: sizeWidth * 0.02, // 화면 너비의 2%로 폰트 크기 설정
-                      color: const Color(0xFF646667),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                 width: (sizeWidth * 0.15), // 화면 너비의 15%로 너비 설정
                 height: (sizeHeight * 0.1), // 화면 높이의 10%로 높이 설정
                 alignment: Alignment.center,
@@ -105,107 +104,6 @@ class _ItemDetailsState extends State<ItemDetails> {
                         fontSize: (sizeWidth * 0.025), // 화면 너비의 2.5%로 폰트 크기 설정
                         color: const Color(0xFFFFFFFF),
                       ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                child: Text(
-                  'X :',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: (sizeWidth * 0.025), // 화면 너비의 2.5%로 폰트 크기 설정
-                    color: const Color(0xFFF3F3F3),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                  height: sizeHeight * 0.1, // 화면 높이의 10%로 높이 설정
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "${GlobalVariables.Item_X}", // GlobalVariables에서 가져온 X 값
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: sizeWidth * 0.02, // 화면 너비의 2%로 폰트 크기 설정
-                      color: const Color(0xFF646667),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                child: Text(
-                  'Y :',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: (sizeWidth * 0.025), // 화면 너비의 2.5%로 폰트 크기 설정
-                    color: const Color(0xFFF3F3F3),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                  height: sizeHeight * 0.1, // 화면 높이의 10%로 높이 설정
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "${GlobalVariables.Item_Y}", // GlobalVariables에서 가져온 Y 값
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: sizeWidth * 0.02, // 화면 너비의 2%로 폰트 크기 설정
-                      color: const Color(0xFF646667),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                child: Text(
-                  'Z :',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: (sizeWidth * 0.025), // 화면 너비의 2.5%로 폰트 크기 설정
-                    color: const Color(0xFFF3F3F3),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                  height: sizeHeight * 0.1, // 화면 높이의 10%로 높이 설정
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "${GlobalVariables.Item_Z}", // GlobalVariables에서 가져온 Z 값
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: sizeWidth * 0.02, // 화면 너비의 2%로 폰트 크기 설정
-                      color: const Color(0xFF646667),
                     ),
                   ),
                 ),
@@ -255,8 +153,6 @@ class _ItemDetailsState extends State<ItemDetails> {
               ),
             ],
           ),
-        ),
-      ],
-    );
+        ]);
   }
 }

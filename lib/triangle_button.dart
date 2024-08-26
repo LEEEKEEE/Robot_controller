@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import './global.dart';
+import './TCPClient.dart';
 import './global.dart';
 
 void showOverlayMessage(BuildContext context, double size, String message) {
@@ -23,10 +24,12 @@ Widget buildTriangleButton(
   return StatefulBuilder(
     builder: (context, setState) {
       Timer? timer;
+      final TCPClient tcp = TCPClient();
 
       void startForwardSignal() {
         timer?.cancel();
-        timer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
+        timer =
+            Timer.periodic(const Duration(milliseconds: 200), (timer) async {
           MessageView.showOverlayMessage(
               context, size, "Sending signal for $num");
 
@@ -42,15 +45,13 @@ Widget buildTriangleButton(
 
       return GestureDetector(
         onTapDown: (_) {
-          MessageView.showOverlayMessage(
-              context, size, "Sending signal for $num");
-          startForwardSignal();
+          // startForwardSignal();
         },
         onTapUp: (_) {
-          stopForwardSignal();
+          // stopForwardSignal();
         },
         onTapCancel: () {
-          stopForwardSignal();
+          //  stopForwardSignal();
         },
         child: Container(
           height: size * height, // 버튼의 높이 설정
@@ -76,44 +77,91 @@ Widget buildTriangleButton(
               // 버튼이 눌렸을 때의 동작 설정
               switch (num) {
                 case 0:
-                  //  MessageView.showOverlayMessage(
-                  //      context, size, "Sending signal for $num");
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
 
+                  int btnnum = num + 1;
+
+                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
                 case 1:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  int btnnum = num + 1;
 
+                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
                 case 2:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  int btnnum = num + 1;
 
+                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
                 case 3:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  int btnnum = num + 1;
 
+                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
                 case 4:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  int btnnum = num + 1;
 
+                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
                 case 5:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  int btnnum = num + 1;
 
+                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
                 case 6:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  int btnnum = num + 1;
 
+                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
                 case 7:
                   MessageView.showOverlayMessage(
                       context, size, "Sending signal for $num");
+                  int btnnum = num + 1;
 
+                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                  break;
+
+                case 8:
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
+                  int btnnum = num + 1;
+
+                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                  break;
+                case 9:
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
+                  int btnnum = num + 1;
+
+                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                  break;
+
+                case 10:
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
+                  int btnnum = num + 1;
+
+                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                  break;
+                case 11:
+                  MessageView.showOverlayMessage(
+                      context, size, "Sending signal for $num");
+                  int btnnum = num + 1;
+
+                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
               }
             },

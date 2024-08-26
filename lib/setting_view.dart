@@ -31,6 +31,9 @@ class _SettingViewState extends State<SettingView> {
 
     return Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 화면을 가리지 않도록 설정합니다.
+        appBar: AppBar(
+          title: const Text('Streaming Configure'),
+        ),
         body: Container(
             decoration: const BoxDecoration(
               color: Color(0xFF363535), // 전체 배경 색상 설정
@@ -46,14 +49,6 @@ class _SettingViewState extends State<SettingView> {
                           Container(
                             margin: EdgeInsets.fromLTRB(
                                 (sizeWidth * 0.3), 10, (sizeWidth * 0.3), 0),
-                            child: Text(
-                              'Streaming Configure',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: (sizeWidth * 0.02),
-                                color: const Color(0xFFFFFFFF),
-                              ),
-                            ),
                           ),
                           Container(
                               child: Row(
@@ -81,8 +76,8 @@ class _SettingViewState extends State<SettingView> {
                                     height: sizeHeight * 0.1,
                                     margin:
                                         const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                                    padding:
-                                        const EdgeInsets.fromLTRB(10, 5, 10, 1),
+                                    padding: const EdgeInsets.fromLTRB(
+                                        10, 13, 10, 1),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFFF3F3F3),
                                       borderRadius: BorderRadius.circular(10),
