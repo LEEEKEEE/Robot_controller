@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
-import 'package:wakelock/wakelock.dart';
 import 'dart:ui';
 import 'dart:async';
 import 'dart:math';
@@ -15,12 +14,10 @@ import './control_view_translation.dart';
 import 'triangle_button.dart';
 import './camera_view.dart';
 import './item_detail.dart';
-import './permission.dart';
 import './pose_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진의 바인딩을 보장합니다.
-  Wakelock.enable(); // 화면이 꺼지지 않도록 설정합니다.
   runApp(
     MultiProvider(
       providers: [
@@ -74,12 +71,6 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
         GlobalVariables.isWifiConnected = isConnected;
       });
     });
-
-    _initApp();
-  }
-
-  Future<void> _initApp() async {
-    await PermissionUtil.check();
   }
 
   @override
@@ -156,7 +147,7 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
                                   ),
                                 ),
                               ]),
-                          // 카메라 뷰 번역 조절
+                          // 카메라 뷰 조절
                           CameraViewTranslationControls(
                             Size_Height: sizeHeight, // 화면 높이 전달
                             Size_Width: sizeWidth, // 화면 너비 전달

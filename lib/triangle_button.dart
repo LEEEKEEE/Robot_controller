@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:provider/provider.dart';
 import './global.dart';
 import './TCPClient.dart';
-import './global.dart';
 
 void showOverlayMessage(BuildContext context, double size, String message) {
   final snackBar = SnackBar(content: Text(message));
@@ -25,14 +25,12 @@ Widget buildTriangleButton(
     builder: (context, setState) {
       Timer? timer;
       final TCPClient tcp = TCPClient();
+      final viewModel = Provider.of<CameraViewModel>(context);
 
       void startForwardSignal() {
         timer?.cancel();
         timer =
             Timer.periodic(const Duration(milliseconds: 200), (timer) async {
-          MessageView.showOverlayMessage(
-              context, size, "Sending signal for $num");
-
           //setState(() {
           //   SetTxData.pressed_btn_num = num;
           //  });
@@ -76,89 +74,102 @@ Widget buildTriangleButton(
             onPressed: () {
               // 버튼이 눌렸을 때의 동작 설정
               switch (num) {
-                case 0:
-                  MessageView.showOverlayMessage(
-                      context, size, "Sending signal for $num");
-
-                  int btnnum = num + 1;
-
-                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                  break;
-                case 1:
-                  MessageView.showOverlayMessage(
-                      context, size, "Sending signal for $num");
-                  int btnnum = num + 1;
-
-                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                  break;
                 case 2:
-                  MessageView.showOverlayMessage(
-                      context, size, "Sending signal for $num");
-                  int btnnum = num + 1;
+                  if (viewModel.touchPosition != null) {
+                    Provider.of<CameraViewModel>(context, listen: false)
+                        .clearTouchPosition();
 
+                    tcp.sendMessage(RobotCommand.createCancelPacket());
+                  }
+
+                  int btnnum = num + 1;
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
+
                 case 3:
-                  MessageView.showOverlayMessage(
-                      context, size, "Sending signal for $num");
+                  if (viewModel.touchPosition != null) {
+                    Provider.of<CameraViewModel>(context, listen: false)
+                        .clearTouchPosition();
+
+                    tcp.sendMessage(RobotCommand.createCancelPacket());
+                  }
+
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
+
                 case 4:
-                  MessageView.showOverlayMessage(
-                      context, size, "Sending signal for $num");
+                  if (viewModel.touchPosition != null) {
+                    Provider.of<CameraViewModel>(context, listen: false)
+                        .clearTouchPosition();
+
+                    tcp.sendMessage(RobotCommand.createCancelPacket());
+                  }
+
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
+
                 case 5:
-                  MessageView.showOverlayMessage(
-                      context, size, "Sending signal for $num");
-                  int btnnum = num + 1;
+                  if (viewModel.touchPosition != null) {
+                    Provider.of<CameraViewModel>(context, listen: false)
+                        .clearTouchPosition();
 
-                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                  break;
-                case 6:
-                  MessageView.showOverlayMessage(
-                      context, size, "Sending signal for $num");
-                  int btnnum = num + 1;
+                    tcp.sendMessage(RobotCommand.createCancelPacket());
+                  }
 
-                  tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                  break;
-                case 7:
-                  MessageView.showOverlayMessage(
-                      context, size, "Sending signal for $num");
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
 
                 case 8:
-                  MessageView.showOverlayMessage(
-                      context, size, "Sending signal for $num");
+                  if (viewModel.touchPosition != null) {
+                    Provider.of<CameraViewModel>(context, listen: false)
+                        .clearTouchPosition();
+
+                    tcp.sendMessage(RobotCommand.createCancelPacket());
+                  }
+
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
+
                 case 9:
-                  MessageView.showOverlayMessage(
-                      context, size, "Sending signal for $num");
+                  if (viewModel.touchPosition != null) {
+                    Provider.of<CameraViewModel>(context, listen: false)
+                        .clearTouchPosition();
+
+                    tcp.sendMessage(RobotCommand.createCancelPacket());
+                  }
+
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
 
                 case 10:
-                  MessageView.showOverlayMessage(
-                      context, size, "Sending signal for $num");
+                  if (viewModel.touchPosition != null) {
+                    Provider.of<CameraViewModel>(context, listen: false)
+                        .clearTouchPosition();
+
+                    tcp.sendMessage(RobotCommand.createCancelPacket());
+                  }
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
+
                 case 11:
-                  MessageView.showOverlayMessage(
-                      context, size, "Sending signal for $num");
+                  if (viewModel.touchPosition != null) {
+                    Provider.of<CameraViewModel>(context, listen: false)
+                        .clearTouchPosition();
+
+                    tcp.sendMessage(RobotCommand.createCancelPacket());
+                  }
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));

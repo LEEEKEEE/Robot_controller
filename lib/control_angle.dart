@@ -57,7 +57,7 @@ class _CameraAngleControlsState extends State<CameraAngleControls> {
                     false,
                     true,
                     false,
-                    2,
+                    5,
                   ),
                   SizedBox(width: sizeHeight * 0.008),
                   Column(
@@ -72,7 +72,7 @@ class _CameraAngleControlsState extends State<CameraAngleControls> {
                         true,
                         false,
                         false,
-                        3,
+                        2,
                       ),
                       SizedBox(height: sizeHeight * 0.008),
                       Container(
@@ -102,7 +102,7 @@ class _CameraAngleControlsState extends State<CameraAngleControls> {
                         false,
                         true,
                         true,
-                        5,
+                        3,
                       ),
                     ],
                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:provider/provider.dart';
 
 import './global.dart';
 import './setting_view.dart';
@@ -136,7 +137,7 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
             height: (sizeHeight * 0.1),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(sizeHeight * 0.1),
-              color: GlobalVariables.armError.value
+              color: SetRxData.armError.value
                   ? const Color.fromARGB(255, 110, 232, 141)
                   : const Color(0xFFE86E6E),
               boxShadow: const [
@@ -168,7 +169,10 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
             ),
             child: Center(
               child: GestureDetector(
-                onTap: () async {},
+                onTap: () {
+                  Provider.of<CameraViewModel>(context, listen: false)
+                      .togglePlayerState();
+                },
                 child: Icon(
                   Icons.power_settings_new,
                   size: sizeHeight * 0.07,

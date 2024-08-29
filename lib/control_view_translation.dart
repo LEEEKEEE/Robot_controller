@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import './global.dart';
+import './TCPClient.dart';
 
 class CameraViewTranslationControls extends StatefulWidget {
   final double Size_Height;
@@ -22,9 +26,11 @@ class _CameraViewTranslationControlsState
   double get sizeHeight => widget.Size_Height;
   double get sizeWidth => widget.Size_Width;
   Function get buildTriangleButton => widget._buildTriangleButton;
+  final TCPClient tcp = TCPClient();
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<CameraViewModel>(context);
     return Container(
       height: sizeHeight * 0.37,
       margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -53,23 +59,169 @@ class _CameraViewTranslationControlsState
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      buildTriangleButton(context, sizeHeight, 0.1, 0.15, true,
-                          true, false, false, 6),
+                      Container(
+                        height: sizeHeight * 0.14, // 버튼의 높이 설정
+                        width: sizeHeight * 0.14, // 버튼의 너비 설정
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF646667), // 버튼 배경색
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(sizeHeight),
+                            bottomLeft: Radius.zero,
+                            topRight: Radius.circular(sizeHeight),
+                            bottomRight: Radius.zero,
+                          ),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x40000000), // 그림자 색상
+                              offset: Offset(0, 4), // 그림자의 위치
+                              blurRadius: 2, // 그림자의 블러 반경
+                            ),
+                          ],
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (viewModel.touchPosition != null) {
+                              Provider.of<CameraViewModel>(context,
+                                      listen: false)
+                                  .clearTouchPosition();
+
+                              tcp.sendMessage(
+                                  RobotCommand.createCancelPacket());
+                            }
+
+                            tcp.sendMessage(RobotCommand.createButtonPacket(7));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF646667), // 버튼 배경색
+                            elevation: 0, // 버튼의 그림자 높이
+                            padding: EdgeInsets.zero, // 버튼의 패딩 설정
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(sizeHeight),
+                                bottomLeft: Radius.zero,
+                                topRight: Radius.circular(sizeHeight),
+                                bottomRight: Radius.zero,
+                              ),
+                            ),
+                          ),
+                          child: Container(
+                            height: sizeHeight * 0.11, // 버튼의 자식 컨테이너 높이
+                            width: sizeHeight * 0.11, // 버튼의 자식 컨테이너 너비
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF646667), // 자식 컨테이너 배경색
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(sizeHeight),
+                                bottomLeft: Radius.zero,
+                                topRight: Radius.circular(sizeHeight),
+                                bottomRight: Radius.zero,
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0xFF2A2A2A), // 자식 컨테이너의 그림자 색상
+                                  spreadRadius: 1, // 그림자의 확산 반경
+                                  blurRadius: 1, // 그림자의 블러 반경
+                                  offset: Offset(0, 0), // 그림자의 위치
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.zoom_in,
+                                size: sizeHeight * 0.07,
+                                color: const Color.fromARGB(255, 255, 255, 255),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                       SizedBox(height: sizeHeight * 0.008),
                       SizedBox(height: sizeHeight * 0.008),
-                      buildTriangleButton(context, sizeHeight, 0.1, 0.15, false,
-                          false, true, true, 7),
+                      Container(
+                        height: sizeHeight * 0.14, // 버튼의 높이 설정
+                        width: sizeHeight * 0.14, // 버튼의 너비 설정
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF646667), // 버튼 배경색
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.zero,
+                            bottomLeft: Radius.circular(sizeHeight),
+                            topRight: Radius.zero,
+                            bottomRight: Radius.circular(sizeHeight),
+                          ),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x40000000), // 그림자 색상
+                              offset: Offset(0, 4), // 그림자의 위치
+                              blurRadius: 2, // 그림자의 블러 반경
+                            ),
+                          ],
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (viewModel.touchPosition != null) {
+                              Provider.of<CameraViewModel>(context,
+                                      listen: false)
+                                  .clearTouchPosition();
+
+                              tcp.sendMessage(
+                                  RobotCommand.createCancelPacket());
+                            }
+
+                            tcp.sendMessage(RobotCommand.createButtonPacket(8));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF646667), // 버튼 배경색
+                            elevation: 0, // 버튼의 그림자 높이
+                            padding: EdgeInsets.zero, // 버튼의 패딩 설정
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.zero,
+                                bottomLeft: Radius.circular(sizeHeight),
+                                topRight: Radius.zero,
+                                bottomRight: Radius.circular(sizeHeight),
+                              ),
+                            ),
+                          ),
+                          child: Container(
+                            height: sizeHeight * 0.11, // 버튼의 자식 컨테이너 높이
+                            width: sizeHeight * 0.11, // 버튼의 자식 컨테이너 너비
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF646667), // 자식 컨테이너 배경색
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.zero,
+                                bottomLeft: Radius.circular(sizeHeight),
+                                topRight: Radius.zero,
+                                bottomRight: Radius.circular(sizeHeight),
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0xFF2A2A2A), // 자식 컨테이너의 그림자 색상
+                                  spreadRadius: 1, // 그림자의 확산 반경
+                                  blurRadius: 1, // 그림자의 블러 반경
+                                  offset: Offset(0, 0), // 그림자의 위치
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.zoom_out,
+                                size: sizeHeight * 0.07,
+                                color: const Color.fromARGB(255, 255, 255, 255),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(width: sizeHeight * 0.05),
                   buildTriangleButton(context, sizeHeight, 0.15, 0.1, true,
-                      false, true, false, 8),
+                      false, true, false, 9),
                   SizedBox(width: sizeHeight * 0.008),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       buildTriangleButton(context, sizeHeight, 0.1, 0.15, true,
-                          true, false, false, 9),
+                          true, false, false, 10),
                       SizedBox(height: sizeHeight * 0.008),
                       Container(
                         width: sizeHeight * 0.08,
@@ -95,7 +247,7 @@ class _CameraViewTranslationControlsState
                   ),
                   SizedBox(width: sizeHeight * 0.008),
                   buildTriangleButton(context, sizeHeight, 0.15, 0.1, false,
-                      true, false, true, 10),
+                      true, false, true, 8),
                 ],
               ),
             ],
