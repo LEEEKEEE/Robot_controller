@@ -5,11 +5,6 @@ import 'package:provider/provider.dart';
 import './global.dart';
 import './TCPClient.dart';
 
-void showOverlayMessage(BuildContext context, double size, String message) {
-  final snackBar = SnackBar(content: Text(message));
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-}
-
 Widget buildTriangleButton(
   BuildContext context,
   double size, // 버튼의 크기를 조정할 배율 인자
@@ -30,10 +25,11 @@ Widget buildTriangleButton(
       void startForwardSignal() {
         timer?.cancel();
         timer =
-            Timer.periodic(const Duration(milliseconds: 200), (timer) async {
-          //setState(() {
-          //   SetTxData.pressed_btn_num = num;
-          //  });
+            Timer.periodic(const Duration(milliseconds: 300), (timer) async {
+          /*MessageView.showOverlaybtnMessage(
+              context, size, "Sending signal for $num");*/
+          int btnnum = num + 1;
+          tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
         });
       }
 
@@ -43,13 +39,15 @@ Widget buildTriangleButton(
 
       return GestureDetector(
         onTapDown: (_) {
-          // startForwardSignal();
+          startForwardSignal();
         },
         onTapUp: (_) {
-          // stopForwardSignal();
+          stopForwardSignal();
+          // MessageView.showOverlaybtnMessage(context, size, "Button released");
         },
         onTapCancel: () {
-          //  stopForwardSignal();
+          stopForwardSignal();
+          // MessageView.showOverlaybtnMessage(context, size, "Button canceled");
         },
         child: Container(
           height: size * height, // 버튼의 높이 설정
@@ -72,104 +70,51 @@ Widget buildTriangleButton(
           ),
           child: ElevatedButton(
             onPressed: () {
-              // 버튼이 눌렸을 때의 동작 설정
+              Provider.of<CameraViewModel>(context, listen: false)
+                  .cancelcoordinate();
               switch (num) {
                 case 2:
-                  if (viewModel.touchPosition != null) {
-                    Provider.of<CameraViewModel>(context, listen: false)
-                        .clearTouchPosition();
-
-                    tcp.sendMessage(RobotCommand.createCancelPacket());
-                  }
-
                   int btnnum = num + 1;
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
 
                 case 3:
-                  if (viewModel.touchPosition != null) {
-                    Provider.of<CameraViewModel>(context, listen: false)
-                        .clearTouchPosition();
-
-                    tcp.sendMessage(RobotCommand.createCancelPacket());
-                  }
-
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
 
                 case 4:
-                  if (viewModel.touchPosition != null) {
-                    Provider.of<CameraViewModel>(context, listen: false)
-                        .clearTouchPosition();
-
-                    tcp.sendMessage(RobotCommand.createCancelPacket());
-                  }
-
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
 
                 case 5:
-                  if (viewModel.touchPosition != null) {
-                    Provider.of<CameraViewModel>(context, listen: false)
-                        .clearTouchPosition();
-
-                    tcp.sendMessage(RobotCommand.createCancelPacket());
-                  }
-
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
 
                 case 8:
-                  if (viewModel.touchPosition != null) {
-                    Provider.of<CameraViewModel>(context, listen: false)
-                        .clearTouchPosition();
-
-                    tcp.sendMessage(RobotCommand.createCancelPacket());
-                  }
-
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
 
                 case 9:
-                  if (viewModel.touchPosition != null) {
-                    Provider.of<CameraViewModel>(context, listen: false)
-                        .clearTouchPosition();
-
-                    tcp.sendMessage(RobotCommand.createCancelPacket());
-                  }
-
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
 
                 case 10:
-                  if (viewModel.touchPosition != null) {
-                    Provider.of<CameraViewModel>(context, listen: false)
-                        .clearTouchPosition();
-
-                    tcp.sendMessage(RobotCommand.createCancelPacket());
-                  }
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
                   break;
 
                 case 11:
-                  if (viewModel.touchPosition != null) {
-                    Provider.of<CameraViewModel>(context, listen: false)
-                        .clearTouchPosition();
-
-                    tcp.sendMessage(RobotCommand.createCancelPacket());
-                  }
                   int btnnum = num + 1;
 
                   tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));

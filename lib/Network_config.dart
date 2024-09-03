@@ -33,7 +33,7 @@ class _NetworkConfigState extends State<NetworkConfig> {
     return Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 화면을 가리지 않도록 설정합니다.
         appBar: AppBar(
-          title: const Text('Network Configure'),
+          title: const Text('Robot Arm Network Configure'),
         ),
         body: Container(
             decoration: const BoxDecoration(
@@ -42,7 +42,7 @@ class _NetworkConfigState extends State<NetworkConfig> {
             child: SafeArea(
                 child: Container(
                     padding:
-                        const EdgeInsets.fromLTRB(10, 5, 10, 5), // 컨테이너의 패딩 설정
+                        const EdgeInsets.fromLTRB(0, 5, 10, 5), // 컨테이너의 패딩 설정
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -290,6 +290,49 @@ class _NetworkConfigState extends State<NetworkConfig> {
                               ),
                             ),
                           ),
+                          ValueListenableBuilder<bool>(
+                              valueListenable: GlobalVariables.isTCPConnected,
+                              builder: (context, isTCPConnected, _) {
+                                return Container(
+                                  margin:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                  width: (sizeWidth * 0.3),
+                                  height: (sizeHeight * 0.1),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: isTCPConnected
+                                        ? const Color(0xFF646667)
+                                        : const Color.fromARGB(255, 67, 69, 70),
+                                  ),
+                                  child: InkWell(
+                                    onTap: isTCPConnected
+                                        ? () {
+                                            MessageView.showOverlayMessage(
+                                                context,
+                                                sizeHeight,
+                                                "Edge Ai Power Off");
+                                            tcp.sendMessage(
+                                                RobotCommand.createOFFPacket());
+                                          }
+                                        : null,
+                                    child: Container(
+                                      width: (sizeWidth * 0.3),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'Edge Ai Power Off',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: (sizeWidth * 0.02),
+                                            color: isTCPConnected
+                                                ? const Color(0xFFFFFFFF)
+                                                : const Color.fromARGB(
+                                                    123, 255, 255, 255)),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
                           SizedBox(
                             width: (sizeWidth * 0.15),
                             height: (sizeHeight * 0.15),

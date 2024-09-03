@@ -52,7 +52,7 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> with TickerProviderStateMixin {
   final currentDate = DateTime.now(); // 현재 날짜를 가져옵니다.
-  late TimerMonitor _TimerMonitor;
+  late wifiMonitor _wifiMonitor;
 
   @override
   void initState() {
@@ -64,9 +64,9 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
 
-    _TimerMonitor = TimerMonitor();
-    _TimerMonitor.startMonitoring();
-    _TimerMonitor.wifiStream.listen((isConnected) {
+    _wifiMonitor = wifiMonitor();
+    _wifiMonitor.startMonitoring();
+    _wifiMonitor.wifiStream.listen((isConnected) {
       setState(() {
         GlobalVariables.isWifiConnected = isConnected;
       });

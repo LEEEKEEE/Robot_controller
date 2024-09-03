@@ -132,23 +132,27 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
               );
             },
           ),
-          Container(
-            width: (sizeHeight * 0.1),
-            height: (sizeHeight * 0.1),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(sizeHeight * 0.1),
-              color: SetRxData.armError.value
-                  ? const Color.fromARGB(255, 110, 232, 141)
-                  : const Color(0xFFE86E6E),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x40000000),
-                  offset: Offset(0, 4),
-                  blurRadius: 2,
-                ),
-              ],
-            ),
-          ),
+          ValueListenableBuilder<bool>(
+              valueListenable: SetRxData.armError,
+              builder: (context, armError, _) {
+                return Container(
+                  width: (sizeHeight * 0.1),
+                  height: (sizeHeight * 0.1),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(sizeHeight * 0.1),
+                    color: armError
+                        ? const Color.fromARGB(255, 110, 232, 141)
+                        : const Color(0xFFE86E6E),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x40000000),
+                        offset: Offset(0, 4),
+                        blurRadius: 2,
+                      ),
+                    ],
+                  ),
+                );
+              }),
           SizedBox(
             width: (sizeHeight * 0.1),
             height: (sizeHeight * 0.1),

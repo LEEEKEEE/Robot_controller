@@ -50,10 +50,6 @@ class RobotCommand {
   static const int EVENT_OFF = 0x05;
 
   static Uint8List createButtonPacket(int buttonNumber) {
-    if (buttonNumber < 1 || buttonNumber > 13) {
-      throw ArgumentError('Button number must be between 1 and 13');
-    }
-
     ByteData packet = ByteData(8);
     packet.setUint8(0, PACKET_START);
     packet.setUint8(1, EVENT_BUTTON);
@@ -214,6 +210,43 @@ class MessageView {
     });
   }
 
+  static void showOverlaybtnMessage(
+      BuildContext context, double sizeWidth, String message) {
+    Haptics.vibrate(HapticsType.light);
+    OverlayEntry overlayEntry;
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned.fill(
+        child: Material(
+          color: Colors.transparent,
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                message,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: sizeWidth * 0.05,
+                  color: const Color(0xFFF3F3F3),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(context).insert(overlayEntry);
+
+    // 일정 시간 후에 Overlay를 제거합니다.
+    Future.delayed(const Duration(milliseconds: 50), () {
+      overlayEntry.remove();
+    });
+  }
+
   static void showInputModal(
       BuildContext context, String label, TextEditingController controller) {
     FocusNode focusNode = FocusNode();
@@ -290,6 +323,8 @@ class MessageView {
 }
 
 class CameraViewModel extends ChangeNotifier {
+  final TCPClient tcp = TCPClient();
+
   Offset? _touchPosition;
   String _touchPositionText = '';
   String _networkURL = "rtp://@:5000";
@@ -300,10 +335,20 @@ class CameraViewModel extends ChangeNotifier {
   String get touchPositionText => _touchPositionText;
   String get networkURL => _networkURL;
 
+  void cancelcoordinate() async {
+    if (touchPosition != null) {
+      clearTouchPosition();
+
+      tcp.sendMessage(RobotCommand.createCancelPacket());
+
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
+  }
+
   void updateTouchPosition(Offset position, String text) {
     _touchPosition = position;
     _touchPositionText = text;
-    SetRxData.itemName.value = "상품 인식(예시)";
+    //SetRxData.itemName.value = "상품 인식(예시)";
     notifyListeners();
   }
 
@@ -325,39 +370,26 @@ class CameraViewModel extends ChangeNotifier {
   }
 }
 
-class TimerMonitor {
+class wifiMonitor {
   final StreamController<bool> _wifiStreamController = StreamController<bool>();
+  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
+
   Stream<bool> get wifiStream => _wifiStreamController.stream;
 
   void startMonitoring() {
-    Timer.periodic(const Duration(milliseconds: 10), (timer) async {
-      // Date & Time
-      GlobalVariables.nowDateTime = DateTime.now();
-    });
-    Timer.periodic(const Duration(milliseconds: 50), (timer) async {
-      // Check Wifi
-      final connectivityResult = await Connectivity().checkConnectivity();
-      final isWifiConnected = connectivityResult == ConnectivityResult.wifi;
-      _wifiStreamController.add(isWifiConnected);
-    });
-    Timer.periodic(const Duration(milliseconds: 10), (timer) async {
-      if (DateTime.now()
-              .difference(GlobalVariables.sendDateTime)
-              .inMilliseconds >=
-          GlobalVariables.txtimer_duration) {
-        GlobalVariables.sendDateTime = DateTime.now();
-      }
+    // 기존 구독이 있으면 취소
+    _connectivitySubscription?.cancel();
 
-      if (DateTime.now()
-              .difference(GlobalVariables.reavDateTime)
-              .inMilliseconds >=
-          GlobalVariables.rxtimer_duration) {
-        GlobalVariables.reavDateTime = DateTime.now();
-      }
+    _connectivitySubscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      final isWifiConnected = result == ConnectivityResult.wifi;
+      _wifiStreamController.add(isWifiConnected);
     });
   }
 
   void dispose() {
-    _wifiStreamController.close();
+    _connectivitySubscription?.cancel(); // 구독 취소
+    _wifiStreamController.close(); // 스트림 컨트롤러 닫기
   }
 }

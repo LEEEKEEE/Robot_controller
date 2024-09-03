@@ -70,16 +70,21 @@ class _CameraViewState extends State<CameraView> {
       autoPlay: true,
       options: VlcPlayerOptions(
         advanced: VlcAdvancedOptions([
-          VlcAdvancedOptions.networkCaching(1000),
+          VlcAdvancedOptions.networkCaching(300),
+          VlcAdvancedOptions.liveCaching(200),
+          VlcAdvancedOptions.fileCaching(200),
           VlcAdvancedOptions.clockSynchronization(0), // 클럭 동기화 비활성화
           VlcAdvancedOptions.clockJitter(0), // 클럭 지터 제거
+        ]),
+        audio: VlcAudioOptions([
+          VlcAudioOptions.audioTimeStretch(false),
         ]),
         video: VlcVideoOptions([
           VlcVideoOptions.dropLateFrames(true),
           VlcVideoOptions.skipFrames(true), // 프레임 건너뛰기 활성화
         ]),
         rtp: VlcRtpOptions([
-          VlcRtpOptions.rtpOverRtsp(false),
+          VlcRtpOptions.rtpOverRtsp(true),
         ]),
       ),
     );
