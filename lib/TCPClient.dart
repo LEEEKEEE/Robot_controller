@@ -39,17 +39,18 @@ class TCPClient {
       StreamSubscription<List<int>>? subscription;
 
       subscription = _socket?.listen((data) {
+        print('received: $data');
         buffer.addAll(data);
         while (buffer.isNotEmpty) {
           if (buffer[0] != 0xAA) {
             buffer.removeAt(0);
             continue;
           }
-          if (buffer.length < 5) break; // 최소 패킷 길이
+          if (buffer.length < 6) break; // 최소 패킷 길이
 
-          int dataLength = buffer[3];
+          int dataLength = buffer[4];
           int packetLength =
-              4 + dataLength + 1; // 헤더(1) + 플래그(3) + 길이(1) + 데이터(n) + 테일(1)
+              5 + dataLength + 1; // 헤더(1) + 플래그(3) + 길이(1) + 데이터(n) + 테일(1)
 
           if (buffer.length < packetLength) break;
 
@@ -59,7 +60,11 @@ class TCPClient {
           }
 
           List<int> packet = buffer.sublist(0, packetLength);
-          processPacket(packet);
+          try {
+            processPacket(packet);
+          } catch (e) {
+            print('Error processing packet: $e');
+          }
 
           buffer = buffer.sublist(packetLength);
         }
@@ -93,13 +98,13 @@ class TCPClient {
   void processPacket(List<int> packet) {
     int flag1 = packet[1];
     int flag2 = packet[2];
-    //int flag3 = packet[3];
-    int dataLength = packet[3];
+    int flag3 = packet[3];
+    int dataLength = packet[4];
 
     print('Received packet:');
     print('Flag1: $flag1');
     print('Flag2: $flag2');
-    //print('Flag2: $flag3');
+    print('Flag2: $flag3');
 
     if (flag1 == 1) {
       SetRxData.armError.value = true;
@@ -111,7 +116,7 @@ class TCPClient {
       SetRxData.itemExist.value = true;
       if (dataLength > 0) {
         SetRxData.itemName.value =
-            String.fromCharCodes(packet.sublist(4, 4 + dataLength));
+            utf8.decode(packet.sublist(5, 5 + dataLength));
       } else {
         SetRxData.itemName.value = ''; // 데이터 길이가 0일 때 빈 문자열로 설정
       }
@@ -120,11 +125,11 @@ class TCPClient {
       SetRxData.itemName.value = '';
     }
 
-//    if (flag2 == 1) {
-//      SetRxData.angleError.value = true;
-//    } else if (flag2 == 2) {
-//      SetRxData.angleError.value = false;
-//    }
+    if (flag3 == 1) {
+      SetRxData.angleError.value = true;
+    } else if (flag3 == 2) {
+      SetRxData.angleError.value = false;
+    }
   }
 
   void sendMessage(Uint8List message) async {

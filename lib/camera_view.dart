@@ -102,11 +102,11 @@ class _CameraViewState extends State<CameraView> {
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
     final Offset localOffset = renderBox.globalToLocal(details.globalPosition);
 
-    const int centerX = 320;
-    const int centerY = 240;
+    const int centerX = 640;
+    const int centerY = 360;
 
-    final double dataDx = (localOffset.dx / renderBox.size.width) * 640;
-    final double dataDy = (localOffset.dy / renderBox.size.height) * 480;
+    final double dataDx = (localOffset.dx / renderBox.size.width) * 1280;
+    final double dataDy = (localOffset.dy / renderBox.size.height) * 720;
 
     final int intDataDx = dataDx.toInt();
     final int intDataDy = dataDy.toInt();

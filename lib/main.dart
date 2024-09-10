@@ -71,6 +71,12 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
         GlobalVariables.isWifiConnected = isConnected;
       });
     });
+
+    SetRxData.itemExist.addListener(() {
+      MessageView.showOverlayMessage(
+          context, MediaQuery.of(context).size.width, "해당 좌표 상품인식에 실패하였습니다.");
+      SetRxData.itemExist.value = true;
+    });
   }
 
   @override

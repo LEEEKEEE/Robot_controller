@@ -205,7 +205,7 @@ class MessageView {
     Overlay.of(context).insert(overlayEntry);
 
     // 일정 시간 후에 Overlay를 제거합니다.
-    Future.delayed(const Duration(milliseconds: 300), () {
+    Future.delayed(const Duration(milliseconds: 1500), () {
       overlayEntry.remove();
     });
   }

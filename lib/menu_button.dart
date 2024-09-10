@@ -33,26 +33,26 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: (sizeHeight * 0.1),
-            height: (sizeHeight * 0.1),
-            margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(sizeHeight * 0.1),
-              color: const Color(0xFF646667),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x40000000),
-                  offset: Offset(0, 4),
-                  blurRadius: 2,
-                ),
-              ],
-            ),
-            child: Center(
-              child: GestureDetector(
-                onTap: () {
-                  MessageView.showExitConfirmationDialog(context, sizeWidth);
-                },
+          GestureDetector(
+            onTap: () {
+              MessageView.showExitConfirmationDialog(context, sizeWidth);
+            },
+            child: Container(
+              width: (sizeHeight * 0.1),
+              height: (sizeHeight * 0.1),
+              margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(sizeHeight * 0.1),
+                color: const Color(0xFF646667),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x40000000),
+                    offset: Offset(0, 4),
+                    blurRadius: 2,
+                  ),
+                ],
+              ),
+              child: Center(
                 child: Icon(
                   Icons.meeting_room,
                   size: sizeHeight * 0.07,
@@ -60,33 +60,33 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
               ),
             ),
           ),
-          Container(
-            width: (sizeHeight * 0.1),
-            height: (sizeHeight * 0.1),
-            margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(sizeHeight * 0.1),
-              color: const Color(0xFF646667),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x40000000),
-                  offset: Offset(0, 4),
-                  blurRadius: 2,
-                ),
-              ],
-            ),
-            child: Center(
-              child: GestureDetector(
-                onTap: () async {
-                  Haptics.vibrate(HapticsType.light);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return const SettingView();
-                    } // SettingView로 이동
-                        ),
-                  );
-                },
+          GestureDetector(
+            onTap: () async {
+              Haptics.vibrate(HapticsType.light);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return const SettingView();
+                } // SettingView로 이동
+                    ),
+              );
+            },
+            child: Container(
+              width: (sizeHeight * 0.1),
+              height: (sizeHeight * 0.1),
+              margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(sizeHeight * 0.1),
+                color: const Color(0xFF646667),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x40000000),
+                    offset: Offset(0, 4),
+                    blurRadius: 2,
+                  ),
+                ],
+              ),
+              child: Center(
                 child: Icon(
                   Icons.settings,
                   size: sizeHeight * 0.07,
@@ -94,44 +94,43 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
               ),
             ),
           ),
-          ValueListenableBuilder<bool>(
-            valueListenable: GlobalVariables.isTCPConnected,
-            builder: (context, isTCPConnected, _) {
-              return Container(
-                width: (sizeHeight * 0.1),
-                height: (sizeHeight * 0.1),
-                margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(sizeHeight * 0.1),
-                  color: const Color(0xFF646667),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x40000000),
-                      offset: Offset(0, 4),
-                      blurRadius: 2,
+          GestureDetector(
+              onTap: () async {
+                Haptics.vibrate(HapticsType.light);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return const NetworkConfig();
+                  }),
+                );
+              },
+              child: ValueListenableBuilder<bool>(
+                valueListenable: GlobalVariables.isTCPConnected,
+                builder: (context, isTCPConnected, _) {
+                  return Container(
+                    width: (sizeHeight * 0.1),
+                    height: (sizeHeight * 0.1),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(sizeHeight * 0.1),
+                      color: const Color(0xFF646667),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x40000000),
+                          offset: Offset(0, 4),
+                          blurRadius: 2,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Center(
-                  child: GestureDetector(
-                    onTap: () async {
-                      Haptics.vibrate(HapticsType.light);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return const NetworkConfig();
-                        }),
-                      );
-                    },
-                    child: Icon(
-                      isTCPConnected ? Icons.link : Icons.link_off,
-                      size: sizeHeight * 0.07,
+                    child: Center(
+                      child: Icon(
+                        isTCPConnected ? Icons.link : Icons.link_off,
+                        size: sizeHeight * 0.07,
+                      ),
                     ),
-                  ),
-                ),
-              );
-            },
-          ),
+                  );
+                },
+              )),
           ValueListenableBuilder<bool>(
               valueListenable: SetRxData.armError,
               builder: (context, armError, _) {
@@ -157,26 +156,26 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
             width: (sizeHeight * 0.1),
             height: (sizeHeight * 0.1),
           ),
-          Container(
-            width: (sizeHeight * 0.1),
-            height: (sizeHeight * 0.1),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(sizeHeight * 0.1),
-              color: const Color(0xFF646667),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x40000000),
-                  offset: Offset(0, 4),
-                  blurRadius: 2,
-                ),
-              ],
-            ),
-            child: Center(
-              child: GestureDetector(
-                onTap: () {
-                  Provider.of<CameraViewModel>(context, listen: false)
-                      .togglePlayerState();
-                },
+          GestureDetector(
+            onTap: () {
+              Provider.of<CameraViewModel>(context, listen: false)
+                  .togglePlayerState();
+            },
+            child: Container(
+              width: (sizeHeight * 0.1),
+              height: (sizeHeight * 0.1),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(sizeHeight * 0.1),
+                color: const Color(0xFF646667),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x40000000),
+                    offset: Offset(0, 4),
+                    blurRadius: 2,
+                  ),
+                ],
+              ),
+              child: Center(
                 child: Icon(
                   Icons.power_settings_new,
                   size: sizeHeight * 0.07,
