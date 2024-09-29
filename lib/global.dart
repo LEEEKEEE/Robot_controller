@@ -25,6 +25,9 @@ class GlobalVariables {
   static DateTime nowDateTime = DateTime.now();
   static DateTime sendDateTime = DateTime.now();
   static DateTime reavDateTime = DateTime.now();
+
+  static ValueNotifier<bool> pick = ValueNotifier<bool>(true);
+  static ValueNotifier<bool> picking = ValueNotifier<bool>(true);
 }
 
 class SetTxData {
@@ -43,11 +46,35 @@ class RobotCommand {
   static const int PACKET_START = 0xAA;
   static const int PACKET_END = 0xDD;
 
+  static const int EVENT_IP = 0x00;
   static const int EVENT_BUTTON = 0x01;
   static const int EVENT_TOUCH = 0x02;
   static const int EVENT_COMMAND = 0x03;
   static const int EVENT_CANCEL = 0x04;
   static const int EVENT_OFF = 0x05;
+  static const int EVENT_PICK = 0x06;
+  static const int EVENT_PICK_OFF = 0x07;
+
+  static Uint8List createIPPacket(String ipAddress) {
+    List<String> ipSegments = ipAddress.split('.');
+    int byte1 = int.parse(ipSegments[0]);
+    int byte2 = int.parse(ipSegments[1]);
+    int byte3 = int.parse(ipSegments[2]);
+    int byte4 = int.parse(ipSegments[3]);
+
+    ByteData packet = ByteData(8);
+
+    packet.setUint8(0, PACKET_START);
+    packet.setUint8(1, EVENT_IP);
+    packet.setUint8(2, 4); // 데이터 길이 4바이트
+    packet.setUint8(3, byte1);
+    packet.setUint8(4, byte2);
+    packet.setUint8(5, byte3);
+    packet.setUint8(6, byte4);
+    packet.setUint8(7, PACKET_END);
+
+    return packet.buffer.asUint8List();
+  }
 
   static Uint8List createButtonPacket(int buttonNumber) {
     ByteData packet = ByteData(8);
@@ -79,6 +106,34 @@ class RobotCommand {
     ByteData packet = ByteData(8);
     packet.setUint8(0, PACKET_START);
     packet.setUint8(1, EVENT_COMMAND);
+    packet.setUint8(2, 4); // 데이터 길이 4바이트
+    packet.setUint8(3, 0);
+    packet.setUint8(4, 0);
+    packet.setUint8(5, 0);
+    packet.setUint8(6, 0);
+    packet.setUint8(7, PACKET_END);
+
+    return packet.buffer.asUint8List();
+  }
+
+  static Uint8List createpickPacket() {
+    ByteData packet = ByteData(8);
+    packet.setUint8(0, PACKET_START);
+    packet.setUint8(1, EVENT_PICK);
+    packet.setUint8(2, 4); // 데이터 길이 4바이트
+    packet.setUint8(3, 0);
+    packet.setUint8(4, 0);
+    packet.setUint8(5, 0);
+    packet.setUint8(6, 0);
+    packet.setUint8(7, PACKET_END);
+
+    return packet.buffer.asUint8List();
+  }
+
+  static Uint8List createpickoffPacket() {
+    ByteData packet = ByteData(8);
+    packet.setUint8(0, PACKET_START);
+    packet.setUint8(1, EVENT_PICK_OFF);
     packet.setUint8(2, 4); // 데이터 길이 4바이트
     packet.setUint8(3, 0);
     packet.setUint8(4, 0);
@@ -330,6 +385,15 @@ class CameraViewModel extends ChangeNotifier {
   String _networkURL = "rtp://@:5000";
   bool _isPlayerActive = true;
 
+  CameraViewModel() {
+    // TCP 연결 상태 변화 리스너 등록
+    GlobalVariables.isTCPConnected.addListener(() {
+      if (!GlobalVariables.isTCPConnected.value) {
+        clearTouchPosition();
+      }
+    });
+  }
+
   bool get isPlayerActive => _isPlayerActive;
   Offset? get touchPosition => _touchPosition;
   String get touchPositionText => _touchPositionText;
@@ -338,17 +402,13 @@ class CameraViewModel extends ChangeNotifier {
   void cancelcoordinate() async {
     if (touchPosition != null) {
       clearTouchPosition();
-
       tcp.sendMessage(RobotCommand.createCancelPacket());
-
-      await Future.delayed(const Duration(milliseconds: 300));
     }
   }
 
   void updateTouchPosition(Offset position, String text) {
     _touchPosition = position;
     _touchPositionText = text;
-    //SetRxData.itemName.value = "상품 인식(예시)";
     notifyListeners();
   }
 
@@ -361,7 +421,7 @@ class CameraViewModel extends ChangeNotifier {
 
   void updateNetworkURL(String url) {
     _networkURL = url;
-    notifyListeners(); // URL 변경 시 리스너들에게 알림
+    notifyListeners();
   }
 
   void togglePlayerState() {

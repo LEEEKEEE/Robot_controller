@@ -94,8 +94,8 @@ class _ItemDetailsState extends State<ItemDetails> {
                       child: InkWell(
                         onTap: itemName.isNotEmpty
                             ? () {
-                                MessageView.showOverlayMessage(
-                                    context, sizeHeight, "Add to cart버튼 클릭");
+                                /*  MessageView.showOverlayMessage(
+                                    context, sizeHeight, "Add to cart버튼 클릭");*/
                                 tcp.sendMessage(
                                     RobotCommand.createCommandPacket());
                               }
@@ -116,6 +116,60 @@ class _ItemDetailsState extends State<ItemDetails> {
                       ),
                     );
                   }),
+              /*     ValueListenableBuilder<bool>(
+                  valueListenable: GlobalVariables.pick,
+                  builder: (context, pick, child) {
+                    return Container(
+                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      width: (sizeWidth * 0.15),
+                      height: (sizeHeight * 0.1),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: GlobalVariables.pick.value
+                            ? const Color.fromARGB(255, 85, 166, 212)
+                            : const Color(0xFF646667),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x40000000),
+                            offset: Offset(0, 4),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          if (!GlobalVariables.isTCPConnected.value) {
+                            MessageView.showOverlayMessage(
+                                context,
+                                MediaQuery.of(context).size.width,
+                                "로봇이 연결되지 않았습니다.");
+                          } else {
+                            GlobalVariables.pick.value =
+                                !GlobalVariables.pick.value;
+
+                            if (GlobalVariables.pick.value) {
+                              tcp.sendMessage(
+                                  RobotCommand.createpickoffPacket());
+                            } else {
+                              tcp.sendMessage(RobotCommand.createpickPacket());
+                            }
+                          }
+                        },
+                        child: Container(
+                          width: (sizeWidth * 0.2),
+                          alignment: Alignment.center,
+                          child: Text(
+                            pick ? 'Pick Up' : 'Put Down',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: (sizeWidth * 0.025),
+                                color: const Color(0xFFFFFFFF)),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),*/
               Container(
                 width: (sizeWidth * 0.15), // 화면 너비의 15%로 너비 설정
                 height: (sizeHeight * 0.1), // 화면 높이의 10%로 높이 설정

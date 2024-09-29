@@ -90,7 +90,7 @@ class _NetworkConfigState extends State<NetworkConfig> {
                                             color: const Color(0xFF2A2A2A)),
                                         decoration: const InputDecoration(
                                             hintText:
-                                                'Server Ip(Def.192.168.35.111)',
+                                                'Server Ip(Def.192.168.0.6)',
                                             hintStyle: TextStyle(
                                               color: Color.fromARGB(
                                                   255, 162, 162, 162),
@@ -186,7 +186,7 @@ class _NetworkConfigState extends State<NetworkConfig> {
                                                                 .text.isNotEmpty
                                                             ? serverIpController
                                                                 .text
-                                                            : "192.168.35.111";
+                                                            : "192.168.0.6";
                                                     GlobalVariables
                                                         .serverPort = int.tryParse(
                                                             serverPortController
@@ -311,7 +311,7 @@ class _NetworkConfigState extends State<NetworkConfig> {
                                             MessageView.showOverlayMessage(
                                                 context,
                                                 sizeHeight,
-                                                "Edge Ai Power Off");
+                                                "Streaming Power Off");
                                             tcp.sendMessage(
                                                 RobotCommand.createOFFPacket());
                                           }
@@ -320,7 +320,7 @@ class _NetworkConfigState extends State<NetworkConfig> {
                                       width: (sizeWidth * 0.3),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        'Edge Ai Power Off',
+                                        'Streaming Power Off',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: (sizeWidth * 0.02),

@@ -101,10 +101,9 @@ class TCPClient {
     int flag3 = packet[3];
     int dataLength = packet[4];
 
-    print('Received packet:');
     print('Flag1: $flag1');
     print('Flag2: $flag2');
-    print('Flag2: $flag3');
+    print('Flag3: $flag3');
 
     if (flag1 == 1) {
       SetRxData.armError.value = true;
@@ -148,14 +147,17 @@ class TCPClient {
     print('Sent to server: $message');
   }
 
-  void sendIPMessage(String message) {
+  void sendIPMessage(String ip) async {
     if (_socket == null) {
       print('Not connected to a server');
       return;
     }
 
-    _socket?.write(message);
-    print('Sent to server: $message');
+    final encodedMessage = RobotCommand.createIPPacket(ip);
+
+    _socket?.add(encodedMessage);
+    await _socket?.done;
+    print('Sent to server: $encodedMessage');
   }
 
   void closeConnection() {

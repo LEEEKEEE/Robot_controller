@@ -56,9 +56,21 @@ class _CameraViewTranslationControlsState
   ) {
     return GestureDetector(
       onTapDown: (_) {
-        Provider.of<CameraViewModel>(context, listen: false).cancelcoordinate();
-        tcp.sendMessage(RobotCommand.createButtonPacket(num + 1));
-        startForwardSignal(num + 1);
+        if (!GlobalVariables.isTCPConnected.value) {
+          MessageView.showOverlayMessage(
+              context, MediaQuery.of(context).size.width, "로봇이 연결되지 않았습니다.");
+        } else {
+          if (!SetRxData.armError.value) {
+            print('Arm is working');
+            MessageView.showOverlayMessage(context,
+                MediaQuery.of(context).size.width, "로봇이 이전 명령을 수행 중입니다.");
+          } else {
+            Provider.of<CameraViewModel>(context, listen: false)
+                .cancelcoordinate();
+            tcp.sendMessage(RobotCommand.createButtonPacket(num + 1));
+            startForwardSignal(num + 1);
+          }
+        }
       },
       onTapUp: (_) {
         stopForwardSignal();
@@ -89,55 +101,66 @@ class _CameraViewTranslationControlsState
         ),
         child: ElevatedButton(
           onPressed: () {
-            Provider.of<CameraViewModel>(context, listen: false)
-                .cancelcoordinate();
-            switch (num) {
-              case 2:
-                int btnnum = num + 1;
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+            if (!GlobalVariables.isTCPConnected.value) {
+              MessageView.showOverlayMessage(context,
+                  MediaQuery.of(context).size.width, "로봇이 연결되지 않았습니다.");
+            } else {
+              if (!SetRxData.armError.value) {
+                print('Arm is working');
+                MessageView.showOverlayMessage(context,
+                    MediaQuery.of(context).size.width, "로봇이 이전 명령을 수행 중입니다.");
+              } else {
+                Provider.of<CameraViewModel>(context, listen: false)
+                    .cancelcoordinate();
+                switch (num) {
+                  case 2:
+                    int btnnum = num + 1;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 3:
-                int btnnum = num + 1;
+                  case 3:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 4:
-                int btnnum = num + 1;
+                  case 4:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 5:
-                int btnnum = num + 1;
+                  case 5:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 8:
-                int btnnum = num + 1;
+                  case 8:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 9:
-                int btnnum = num + 1;
+                  case 9:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 10:
-                int btnnum = num + 1;
+                  case 10:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 11:
-                int btnnum = num + 1;
+                  case 11:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
+                }
+              }
             }
           },
           style: ElevatedButton.styleFrom(
@@ -214,9 +237,26 @@ class _CameraViewTranslationControlsState
                     children: [
                       GestureDetector(
                         onTapDown: (_) {
-                          Provider.of<CameraViewModel>(context, listen: false)
-                              .cancelcoordinate();
-                          startForwardSignal(7);
+                          if (!GlobalVariables.isTCPConnected.value) {
+                            MessageView.showOverlayMessage(
+                                context,
+                                MediaQuery.of(context).size.width,
+                                "로봇이 연결되지 않았습니다.");
+                          } else {
+                            if (!SetRxData.armError.value) {
+                              print('Arm is working');
+                              MessageView.showOverlayMessage(
+                                  context,
+                                  MediaQuery.of(context).size.width,
+                                  "로봇이 이전 명령을 수행 중입니다.");
+                            } else {
+                              Provider.of<CameraViewModel>(context,
+                                      listen: false)
+                                  .cancelcoordinate();
+
+                              startForwardSignal(7);
+                            }
+                          }
                         },
                         onTapUp: (_) {
                           stopForwardSignal();
@@ -247,11 +287,26 @@ class _CameraViewTranslationControlsState
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              Provider.of<CameraViewModel>(context,
-                                      listen: false)
-                                  .cancelcoordinate();
-                              tcp.sendMessage(
-                                  RobotCommand.createButtonPacket(7));
+                              if (!GlobalVariables.isTCPConnected.value) {
+                                MessageView.showOverlayMessage(
+                                    context,
+                                    MediaQuery.of(context).size.width,
+                                    "로봇이 연결되지 않았습니다.");
+                              } else {
+                                if (!SetRxData.armError.value) {
+                                  print('Arm is working');
+                                  MessageView.showOverlayMessage(
+                                      context,
+                                      MediaQuery.of(context).size.width,
+                                      "로봇이 이전 명령을 수행 중입니다.");
+                                } else {
+                                  Provider.of<CameraViewModel>(context,
+                                          listen: false)
+                                      .cancelcoordinate();
+                                  tcp.sendMessage(
+                                      RobotCommand.createButtonPacket(7));
+                                }
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
@@ -303,9 +358,25 @@ class _CameraViewTranslationControlsState
                       SizedBox(height: sizeHeight * 0.008),
                       GestureDetector(
                         onTapDown: (_) {
-                          Provider.of<CameraViewModel>(context, listen: false)
-                              .cancelcoordinate();
-                          startForwardSignal(8);
+                          if (!GlobalVariables.isTCPConnected.value) {
+                            MessageView.showOverlayMessage(
+                                context,
+                                MediaQuery.of(context).size.width,
+                                "로봇이 연결되지 않았습니다.");
+                          } else {
+                            if (!SetRxData.armError.value) {
+                              print('Arm is working');
+                              MessageView.showOverlayMessage(
+                                  context,
+                                  MediaQuery.of(context).size.width,
+                                  "로봇이 이전 명령을 수행 중입니다.");
+                            } else {
+                              Provider.of<CameraViewModel>(context,
+                                      listen: false)
+                                  .cancelcoordinate();
+                              startForwardSignal(8);
+                            }
+                          }
                         },
                         onTapUp: (_) {
                           stopForwardSignal();
@@ -336,19 +407,26 @@ class _CameraViewTranslationControlsState
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              /* if (viewModel.touchPosition != null) {
-                              Provider.of<CameraViewModel>(context,
-                                      listen: false)
-                                  .clearTouchPosition();
-
-                              tcp.sendMessage(
-                                  RobotCommand.createCancelPacket());
-                            }*/
-                              Provider.of<CameraViewModel>(context,
-                                      listen: false)
-                                  .cancelcoordinate();
-                              tcp.sendMessage(
-                                  RobotCommand.createButtonPacket(8));
+                              if (!GlobalVariables.isTCPConnected.value) {
+                                MessageView.showOverlayMessage(
+                                    context,
+                                    MediaQuery.of(context).size.width,
+                                    "로봇이 연결되지 않았습니다.");
+                              } else {
+                                if (!SetRxData.armError.value) {
+                                  print('Arm is working');
+                                  MessageView.showOverlayMessage(
+                                      context,
+                                      MediaQuery.of(context).size.width,
+                                      "로봇이 이전 명령을 수행 중입니다.");
+                                } else {
+                                  Provider.of<CameraViewModel>(context,
+                                          listen: false)
+                                      .cancelcoordinate();
+                                  tcp.sendMessage(
+                                      RobotCommand.createButtonPacket(8));
+                                }
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:

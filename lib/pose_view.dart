@@ -28,7 +28,6 @@ class _PoseControlsState extends State<PoseControls> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<CameraViewModel>(context);
     return Container(
         height: sizeHeight * 0.37,
         margin: const EdgeInsets.fromLTRB(0, 10, 10, 0),
@@ -77,15 +76,26 @@ class _PoseControlsState extends State<PoseControls> {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            if (viewModel.touchPosition != null) {
-                              Provider.of<CameraViewModel>(context,
-                                      listen: false)
-                                  .clearTouchPosition();
-
-                              tcp.sendMessage(
-                                  RobotCommand.createCancelPacket());
+                            if (!GlobalVariables.isTCPConnected.value) {
+                              MessageView.showOverlayMessage(
+                                  context,
+                                  MediaQuery.of(context).size.width,
+                                  "로봇이 연결되지 않았습니다.");
+                            } else {
+                              if (!SetRxData.armError.value) {
+                                print('Arm is working');
+                                MessageView.showOverlayMessage(
+                                    context,
+                                    MediaQuery.of(context).size.width,
+                                    "로봇이 이전 명령을 수행 중입니다.");
+                              } else {
+                                Provider.of<CameraViewModel>(context,
+                                        listen: false)
+                                    .cancelcoordinate();
+                                tcp.sendMessage(
+                                    RobotCommand.createButtonPacket(1));
+                              }
                             }
-                            tcp.sendMessage(RobotCommand.createButtonPacket(1));
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF646667), // 버튼 배경색
@@ -152,15 +162,26 @@ class _PoseControlsState extends State<PoseControls> {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            if (viewModel.touchPosition != null) {
-                              Provider.of<CameraViewModel>(context,
-                                      listen: false)
-                                  .clearTouchPosition();
-
-                              tcp.sendMessage(
-                                  RobotCommand.createCancelPacket());
+                            if (!GlobalVariables.isTCPConnected.value) {
+                              MessageView.showOverlayMessage(
+                                  context,
+                                  MediaQuery.of(context).size.width,
+                                  "로봇이 연결되지 않았습니다.");
+                            } else {
+                              if (!SetRxData.armError.value) {
+                                print('Arm is working');
+                                MessageView.showOverlayMessage(
+                                    context,
+                                    MediaQuery.of(context).size.width,
+                                    "로봇이 이전 명령을 수행 중입니다.");
+                              } else {
+                                Provider.of<CameraViewModel>(context,
+                                        listen: false)
+                                    .cancelcoordinate();
+                                tcp.sendMessage(
+                                    RobotCommand.createButtonPacket(2));
+                              }
                             }
-                            tcp.sendMessage(RobotCommand.createButtonPacket(2));
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF646667), // 버튼 배경색

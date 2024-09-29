@@ -54,9 +54,21 @@ class _CameraAngleControlsState extends State<CameraAngleControls> {
   ) {
     return GestureDetector(
       onTapDown: (_) {
-        Provider.of<CameraViewModel>(context, listen: false).cancelcoordinate();
-        tcp.sendMessage(RobotCommand.createButtonPacket(num + 1));
-        startForwardSignal(num + 1);
+        if (!GlobalVariables.isTCPConnected.value) {
+          MessageView.showOverlayMessage(
+              context, MediaQuery.of(context).size.width, "로봇이 연결되지 않았습니다.");
+        } else {
+          if (!SetRxData.armError.value) {
+            print('Arm is working');
+            MessageView.showOverlayMessage(context,
+                MediaQuery.of(context).size.width, "로봇이 이전 명령을 수행 중입니다.");
+          } else {
+            Provider.of<CameraViewModel>(context, listen: false)
+                .cancelcoordinate();
+            tcp.sendMessage(RobotCommand.createButtonPacket(num + 1));
+            startForwardSignal(num + 1);
+          }
+        }
       },
       onTapUp: (_) {
         stopForwardSignal();
@@ -87,55 +99,66 @@ class _CameraAngleControlsState extends State<CameraAngleControls> {
         ),
         child: ElevatedButton(
           onPressed: () {
-            Provider.of<CameraViewModel>(context, listen: false)
-                .cancelcoordinate();
-            switch (num) {
-              case 2:
-                int btnnum = num + 1;
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+            if (!GlobalVariables.isTCPConnected.value) {
+              MessageView.showOverlayMessage(context,
+                  MediaQuery.of(context).size.width, "로봇이 연결되지 않았습니다.");
+            } else {
+              if (!SetRxData.armError.value) {
+                print('Arm is working');
+                MessageView.showOverlayMessage(context,
+                    MediaQuery.of(context).size.width, "로봇이 이전 명령을 수행 중입니다.");
+              } else {
+                Provider.of<CameraViewModel>(context, listen: false)
+                    .cancelcoordinate();
+                switch (num) {
+                  case 2:
+                    int btnnum = num + 1;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 3:
-                int btnnum = num + 1;
+                  case 3:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 4:
-                int btnnum = num + 1;
+                  case 4:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 5:
-                int btnnum = num + 1;
+                  case 5:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 8:
-                int btnnum = num + 1;
+                  case 8:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 9:
-                int btnnum = num + 1;
+                  case 9:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 10:
-                int btnnum = num + 1;
+                  case 10:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
 
-              case 11:
-                int btnnum = num + 1;
+                  case 11:
+                    int btnnum = num + 1;
 
-                tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
-                break;
+                    tcp.sendMessage(RobotCommand.createButtonPacket(btnnum));
+                    break;
+                }
+              }
             }
           },
           style: ElevatedButton.styleFrom(
