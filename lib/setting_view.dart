@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:provider/provider.dart';
+import 'package:mqtt_client/mqtt_client.dart';
 
 import './global.dart';
 import './main.dart';
 import './camera_view.dart';
+import './MqttService.dart';
 
 class SettingView extends StatefulWidget {
   const SettingView({super.key});
@@ -15,8 +17,9 @@ class SettingView extends StatefulWidget {
 }
 
 class _SettingViewState extends State<SettingView> {
+  final MqttService mqtt = MqttService();
   final TextEditingController URLController = TextEditingController(
-    text: GlobalVariables.Network_URL != "" ? GlobalVariables.Network_URL : '',
+    text: GlobalVariables.broker_URI != "" ? GlobalVariables.broker_URI : '',
   );
 
   @override
@@ -32,7 +35,7 @@ class _SettingViewState extends State<SettingView> {
     return Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 화면을 가리지 않도록 설정합니다.
         appBar: AppBar(
-          title: const Text('Streaming Configure'),
+          title: const Text('MQTT Concection'),
         ),
         body: Container(
             decoration: const BoxDecoration(
@@ -59,7 +62,7 @@ class _SettingViewState extends State<SettingView> {
                                 height: sizeHeight * 0.1,
                                 alignment: Alignment.centerRight,
                                 child: Text(
-                                  'Streaming URL : ',
+                                  'Broker URI : ',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: (sizeWidth * 0.015),
@@ -69,7 +72,7 @@ class _SettingViewState extends State<SettingView> {
                               ),
                               GestureDetector(
                                 onTap: () => MessageView.showInputModal(
-                                    context, 'Streaming URL', URLController),
+                                    context, 'Broker URI', URLController),
                                 child: AbsorbPointer(
                                   child: Container(
                                     width: sizeWidth * 0.70,
@@ -89,7 +92,7 @@ class _SettingViewState extends State<SettingView> {
                                           color: const Color(0xFF2A2A2A)),
                                       decoration: const InputDecoration(
                                           hintText:
-                                              'Streaming URL(Def.rtp://@:5000)',
+                                              'Broker URI(Def.broker.able-ai.kr)',
                                           hintStyle: TextStyle(
                                             color: Color.fromARGB(
                                                 255, 162, 162, 162),
@@ -117,68 +120,112 @@ class _SettingViewState extends State<SettingView> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
                                       child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                          sigmaX: 2,
-                                          sigmaY: 2,
-                                        ),
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            Haptics.vibrate(HapticsType.light);
-
-                                            GlobalVariables.Network_URL =
-                                                URLController.text.isNotEmpty
-                                                    ? URLController.text
-                                                    : "rtp://@:5000";
-                                            Provider.of<CameraViewModel>(
-                                                    context,
-                                                    listen: false)
-                                                .updateNetworkURL(
-                                                    GlobalVariables
-                                                        .Network_URL);
-
-                                            Navigator.pop(context);
-
-                                            if (GlobalVariables
-                                                .Network_URL.isNotEmpty) {
-                                            } else {
-                                              MessageView.showOverlayMessage(
-                                                  context,
-                                                  sizeWidth,
-                                                  "Please Invalid URL");
-                                              // print('Invalid input');
-                                            }
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: const Color(
-                                                0xFF748FC2), // 버튼 색상
-                                            elevation: 0,
-                                            padding: EdgeInsets.zero,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
+                                          filter: ImageFilter.blur(
+                                            sigmaX: 2,
+                                            sigmaY: 2,
                                           ),
-                                          child: Container(
-                                            width: (sizeWidth * 0.3),
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10),
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              'Connect',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: (sizeWidth * 0.02),
-                                                color: const Color(0xFF2A2A2A),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                          child: ValueListenableBuilder<
+                                                  MqttConnectionState>(
+                                              valueListenable:
+                                                  mqtt.connectionState,
+                                              builder: (context,
+                                                  connectionState, _) {
+                                                Color buttoncolor;
+                                                String text;
+                                                if (connectionState ==
+                                                    MqttConnectionState
+                                                        .connected) {
+                                                  buttoncolor =
+                                                      const Color.fromARGB(
+                                                          255, 194, 116, 116);
+                                                  text = "Disconnect";
+                                                } else {
+                                                  buttoncolor =
+                                                      const Color(0xFF748FC2);
+                                                  text = "Connect";
+                                                }
+
+                                                return ElevatedButton(
+                                                  onPressed: () {
+                                                    if (GlobalVariables
+                                                        .isWifiConnected) {
+                                                      /*
+                                                      GlobalVariables
+                                                              .broker_URI =
+                                                          URLController.text
+                                                                  .isNotEmpty
+                                                              ? URLController
+                                                                  .text
+                                                              : "broker.able-ai.kr";*/
+
+                                                      if (connectionState ==
+                                                          MqttConnectionState
+                                                              .connected) {
+                                                        mqtt.disconnect();
+                                                      } else {
+                                                        /*  if (GlobalVariables
+                                                            .broker_URI
+                                                            .isNotEmpty) {*/
+                                                        mqtt.connect();
+                                                        /*   } else {
+                                                          MessageView
+                                                              .showOverlayMessage(
+                                                                  context,
+                                                                  sizeWidth,
+                                                                  "Please Invalid URI");
+                                                          // print('Invalid input');
+                                                        }*/
+                                                      }
+                                                    } else {
+                                                      MessageView
+                                                          .showOverlayMessage(
+                                                              context,
+                                                              sizeWidth,
+                                                              "Please Invalid URI");
+                                                    }
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        buttoncolor, // 버튼 색상
+                                                    elevation: 0,
+                                                    padding: EdgeInsets.zero,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                  ),
+                                                  child: Container(
+                                                    width: (sizeWidth * 0.3),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 10),
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      text,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize:
+                                                            (sizeWidth * 0.02),
+                                                        color: const Color(
+                                                            0xFF2A2A2A),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              })),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(
+                                (sizeWidth * 0.3), 10, (sizeWidth * 0.3), 0),
                           ),
                         ])))));
   }

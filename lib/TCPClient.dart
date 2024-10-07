@@ -141,10 +141,16 @@ class TCPClient {
       return;
     }
     final encodedMessage = message;
-
-    _socket?.add(encodedMessage);
-    await _socket?.done;
-    print('Sent to server: $message');
+    try {
+      _socket?.add(encodedMessage);
+      await _socket?.done;
+      print('Sent to server: $message');
+    } on SocketException catch (e) {
+      print('SocketException: ${e.message}');
+      _handleConnectionReset(); // 연결이 끊겼을 때 처리
+    } catch (e) {
+      print('Unknown error: $e');
+    }
   }
 
   void sendIPMessage(String ip) async {
@@ -154,10 +160,17 @@ class TCPClient {
     }
 
     final encodedMessage = RobotCommand.createIPPacket(ip);
+    try {
+      _socket?.add(encodedMessage);
+      await _socket?.done;
 
-    _socket?.add(encodedMessage);
-    await _socket?.done;
-    print('Sent to server: $encodedMessage');
+      print('Sent to server: $encodedMessage');
+    } on SocketException catch (e) {
+      print('SocketException: ${e.message}');
+      _handleConnectionReset(); // 연결이 끊겼을 때 처리
+    } catch (e) {
+      print('Unknown error: $e');
+    }
   }
 
   void closeConnection() {
@@ -165,5 +178,13 @@ class TCPClient {
     print('Connection closed');
     GlobalVariables.isTCPConnected.value = false;
     SetRxData.armError.value = false;
+  }
+
+  void _handleConnectionReset() {
+    print('Connection reset by server.');
+    // 여기에 UI로 알림을 표시하거나 로그를 남기는 기능 추가
+    GlobalVariables.isTCPConnected.value = false;
+    SetRxData.armError.value = false;
+    // 예: 사용자에게 다이얼로그 표시 또는 알림 메시지
   }
 }

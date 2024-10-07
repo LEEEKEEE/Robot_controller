@@ -1,101 +1,54 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_vlc_player/flutter_vlc_player.dart';
-import 'package:provider/provider.dart';
 
+import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 import './global.dart';
 import './TCPClient.dart';
 
 class CameraView extends StatefulWidget {
-  final double Size_Height;
-
-  const CameraView({super.key, required this.Size_Height});
+  final double Size_Height; // 위젯의 높이를 설정하는 변수
+  final double Size_Width; // 위젯의 너비를 설정하는 변수
+  const CameraView(
+      {super.key, required this.Size_Height, required this.Size_Width});
 
   @override
   _CameraViewState createState() => _CameraViewState();
 }
 
-class _CameraViewState extends State<CameraView> {
-  late VlcPlayerController? _vlcController;
+class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
+//  late VlcPlayerController? _vlcController;
   final TCPClient tcp = TCPClient();
-
-  String _previousNetworkURL = "rtp://@:5000";
+  static const platform =
+      MethodChannel('com.example.robotarm_controller/vlc_player');
 
   @override
   void initState() {
     super.initState();
-    _initializePlayer();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final viewModel = Provider.of<CameraViewModel>(context);
-
-    if (viewModel.isPlayerActive && _vlcController == null) {
-      _initializePlayer();
-    } else if (!viewModel.isPlayerActive && _vlcController != null) {
-      _disposePlayer();
-    }
-
-    // Check if the network URL has changed
-    if (viewModel.networkURL != _previousNetworkURL) {
-      _vlcController?.pause();
-
-      _setMediaFromNetwork(viewModel.networkURL); // 변경된 네트워크 URL로 미디어 설정
-
-      _previousNetworkURL = viewModel.networkURL;
-    }
+    _initializedPlayer();
+    WidgetsBinding.instance.addObserver(this); // 생명주기 이벤트 감지 추가
   }
 
   @override
   void dispose() {
-    _vlcController?.dispose();
+    WidgetsBinding.instance.removeObserver(this); // 생명주기 이벤트 감지 제거
     super.dispose();
   }
 
-  void _disposePlayer() {
-    _vlcController?.dispose();
-    _vlcController = null;
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // 앱이 포그라운드로 돌아왔을 때 VLC 플레이어 재초기화
+      Provider.of<CameraViewModel>(context, listen: false).offPlayerState();
+    }
   }
 
-  void _initializePlayer() {
-    final viewModel = Provider.of<CameraViewModel>(context, listen: false);
-
-    if (viewModel.networkURL.isEmpty) return;
-
-    _vlcController = VlcPlayerController.network(
-      viewModel.networkURL,
-      hwAcc: HwAcc.full,
-      autoPlay: true,
-      options: VlcPlayerOptions(
-        advanced: VlcAdvancedOptions([
-          VlcAdvancedOptions.networkCaching(300),
-          VlcAdvancedOptions.liveCaching(200),
-          VlcAdvancedOptions.fileCaching(200),
-          VlcAdvancedOptions.clockSynchronization(0), // 클럭 동기화 비활성화
-          VlcAdvancedOptions.clockJitter(0), // 클럭 지터 제거
-        ]),
-        audio: VlcAudioOptions([
-          VlcAudioOptions.audioTimeStretch(false),
-        ]),
-        video: VlcVideoOptions([
-          VlcVideoOptions.dropLateFrames(true),
-          VlcVideoOptions.skipFrames(true), // 프레임 건너뛰기 활성화
-        ]),
-        rtp: VlcRtpOptions([
-          VlcRtpOptions.rtpOverRtsp(true),
-        ]),
-      ),
-    );
-  }
-
-  Future<void> _setMediaFromNetwork(String url) async {
-    await _vlcController?.setMediaFromNetwork(
-      url,
-      autoPlay: true,
-      hwAcc: HwAcc.full,
-    );
+  Future<void> _initializedPlayer() async {
+    try {
+      await platform.invokeMethod('initializePlayer');
+    } on PlatformException catch (e) {
+      print("플레이어 초기화 실패: '${e.message}'.");
+    }
   }
 
   void _handleTap(TapUpDetails details) {
@@ -125,9 +78,8 @@ class _CameraViewState extends State<CameraView> {
   Widget build(BuildContext context) {
     final viewModel = Provider.of<CameraViewModel>(context);
     return Consumer<CameraViewModel>(builder: (context, vlcProvider, child) {
-      if (!vlcProvider.isPlayerActive || _vlcController == null) {
+      if (!vlcProvider.isPlayerActive) {
         return Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: BackdropFilter(
@@ -143,7 +95,7 @@ class _CameraViewState extends State<CameraView> {
                         ),
                       ],
                     ),
-                    height: widget.Size_Height * 0.65,
+                    height: widget.Size_Width * 0.3375,
                     padding: const EdgeInsets.all(5),
                     child: const Center(
                       child: Text('Player is inactivated'),
@@ -151,73 +103,81 @@ class _CameraViewState extends State<CameraView> {
                   ),
                 )));
       }
-      return GestureDetector(
-        onTapUp: _handleTap,
-        child: Stack(
-          children: [
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                    child: ValueListenableBuilder<bool>(
-                        valueListenable: SetRxData.angleError,
-                        builder: (context, angleError, _) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFD9D9D9).withOpacity(0.5),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x40000000),
-                                  offset: Offset(0, 4),
-                                  blurRadius: 2,
-                                ),
-                              ],
-                              border: Border.all(
-                                color: angleError
-                                    ? Colors.transparent
-                                    : Colors.red, // 테두리 색 설정
-                                width: 2.0, // 테두리 두께 설정
+
+      return Stack(
+        children: [
+          Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                  child: ValueListenableBuilder<bool>(
+                      valueListenable: SetRxData.angleError,
+                      builder: (context, angleError, _) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFD9D9D9).withOpacity(0.5),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x40000000),
+                                offset: Offset(0, 4),
+                                blurRadius: 2,
                               ),
+                            ],
+                            border: Border.all(
+                              color: angleError
+                                  ? Colors.transparent
+                                  : Colors.red, // 테두리 색 설정
+                              width: 2.0, // 테두리 두께 설정
                             ),
-                            height: widget.Size_Height * 0.65,
-                            padding: const EdgeInsets.all(5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: VlcPlayer(
-                                    controller: _vlcController!,
-                                    aspectRatio: 16 / 9,
-                                    placeholder: const Center(
-                                        child: CircularProgressIndicator()),
+                          ),
+                          height: widget.Size_Width * 0.3375,
+                          padding: const EdgeInsets.all(5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                  child: Stack(children: [
+                                AndroidView(
+                                  viewType:
+                                      'com.example.robotarm_controller/vlc_player_view',
+                                  creationParams: <String, dynamic>{
+                                    'url': vlcProvider.networkURL,
+                                  },
+                                  creationParamsCodec:
+                                      const StandardMessageCodec(),
+                                ),
+                                GestureDetector(
+                                  onTapUp: _handleTap,
+                                  child: Container(
+                                    color: Colors
+                                        .transparent, // 투명한 Container로 제스처 감지
                                   ),
-                                )
-                              ],
-                            ),
-                          );
-                        })),
-              ),
+                                ),
+                              ]))
+                            ],
+                          ),
+                        );
+                      })),
             ),
-            if (viewModel.touchPosition != null)
-              Positioned(
-                left: viewModel.touchPosition!.dx - 50,
-                top: viewModel.touchPosition!.dy - 80,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 58, 58, 58),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    viewModel.touchPositionText,
-                    style: const TextStyle(color: Colors.white),
-                  ),
+          ),
+          if (viewModel.touchPosition != null)
+            Positioned(
+              left: viewModel.touchPosition!.dx - 50,
+              top: viewModel.touchPosition!.dy - 80,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 58, 58, 58),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  viewModel.touchPositionText,
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
       );
     });
   }

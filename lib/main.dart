@@ -15,6 +15,7 @@ import 'triangle_button.dart';
 import './camera_view.dart';
 import './item_detail.dart';
 import './pose_view.dart';
+import './command_button.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진의 바인딩을 보장합니다.
@@ -135,7 +136,7 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Expanded(
-                                  flex: 3, // 오른쪽 부분의 비율을 설정
+                                  flex: 3,
                                   child: PoseControls(
                                     Size_Height: sizeHeight, // 화면 높이 전달
                                     Size_Width: sizeWidth, // 화면 너비 전달
@@ -175,7 +176,13 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
                             CrossAxisAlignment.center, // Column의 자식 위젯을 중앙으로 정렬
                         children: [
                           // 카메라 영상
-                          CameraView(Size_Height: sizeHeight), // 화면 높이 전달
+                          command_button(
+                            Size_Height: sizeHeight, // 화면 높이 전달
+                            Size_Width: sizeWidth, // 화면 너비 전달
+                          ),
+                          CameraView(
+                              Size_Height: sizeHeight,
+                              Size_Width: sizeWidth), // 화면 높이 전달
                           // 아이템 세부 사항
                           ItemDetails(
                               Size_Height: sizeHeight, // 화면 높이 전달

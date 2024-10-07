@@ -8,6 +8,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:math';
 import 'dart:async';
+import 'package:mqtt_client/mqtt_client.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
+
 import './TCPClient.dart';
 
 class GlobalVariables {
@@ -17,8 +20,8 @@ class GlobalVariables {
 
   static bool isWifiConnected = false;
   static bool isURLConnected = false;
-  static ValueNotifier<bool> isTCPConnected = ValueNotifier<bool>(false);
-  static String Network_URL = "";
+
+  static String broker_URI = "";
   static String serverIp = "";
   static int serverPort = 0;
 
@@ -26,6 +29,8 @@ class GlobalVariables {
   static DateTime sendDateTime = DateTime.now();
   static DateTime reavDateTime = DateTime.now();
 
+  static ValueNotifier<bool> isTCPConnected = ValueNotifier<bool>(false);
+  static ValueNotifier<bool> mqttConnected = ValueNotifier<bool>(false);
   static ValueNotifier<bool> pick = ValueNotifier<bool>(true);
   static ValueNotifier<bool> picking = ValueNotifier<bool>(true);
 }
@@ -383,6 +388,8 @@ class CameraViewModel extends ChangeNotifier {
   Offset? _touchPosition;
   String _touchPositionText = '';
   String _networkURL = "rtp://@:5000";
+  //rtp://@:5000
+  //http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
   bool _isPlayerActive = true;
 
   CameraViewModel() {
@@ -426,6 +433,11 @@ class CameraViewModel extends ChangeNotifier {
 
   void togglePlayerState() {
     _isPlayerActive = !_isPlayerActive;
+    notifyListeners();
+  }
+
+  void offPlayerState() {
+    _isPlayerActive = false;
     notifyListeners();
   }
 }
