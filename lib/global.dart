@@ -20,6 +20,7 @@ class GlobalVariables {
 
   static bool isWifiConnected = false;
   static bool isURLConnected = false;
+  static bool showContainer = true;
 
   static String broker_URI = "";
   static String serverIp = "";
@@ -33,6 +34,8 @@ class GlobalVariables {
   static ValueNotifier<bool> mqttConnected = ValueNotifier<bool>(false);
   static ValueNotifier<bool> pick = ValueNotifier<bool>(true);
   static ValueNotifier<bool> picking = ValueNotifier<bool>(true);
+  static ValueNotifier<bool> player = ValueNotifier<bool>(true);
+  static ValueNotifier<bool> addToCart = ValueNotifier<bool>(false);
 }
 
 class SetTxData {
@@ -57,8 +60,8 @@ class RobotCommand {
   static const int EVENT_COMMAND = 0x03;
   static const int EVENT_CANCEL = 0x04;
   static const int EVENT_OFF = 0x05;
-  static const int EVENT_PICK = 0x06;
-  static const int EVENT_PICK_OFF = 0x07;
+  static const int EVENT_TOUCHELEVATE = 0x06;
+  static const int EVENT_PRESS = 0x07;
 
   static Uint8List createIPPacket(String ipAddress) {
     List<String> ipSegments = ipAddress.split('.');
@@ -121,34 +124,6 @@ class RobotCommand {
     return packet.buffer.asUint8List();
   }
 
-  static Uint8List createpickPacket() {
-    ByteData packet = ByteData(8);
-    packet.setUint8(0, PACKET_START);
-    packet.setUint8(1, EVENT_PICK);
-    packet.setUint8(2, 4); // 데이터 길이 4바이트
-    packet.setUint8(3, 0);
-    packet.setUint8(4, 0);
-    packet.setUint8(5, 0);
-    packet.setUint8(6, 0);
-    packet.setUint8(7, PACKET_END);
-
-    return packet.buffer.asUint8List();
-  }
-
-  static Uint8List createpickoffPacket() {
-    ByteData packet = ByteData(8);
-    packet.setUint8(0, PACKET_START);
-    packet.setUint8(1, EVENT_PICK_OFF);
-    packet.setUint8(2, 4); // 데이터 길이 4바이트
-    packet.setUint8(3, 0);
-    packet.setUint8(4, 0);
-    packet.setUint8(5, 0);
-    packet.setUint8(6, 0);
-    packet.setUint8(7, PACKET_END);
-
-    return packet.buffer.asUint8List();
-  }
-
   static Uint8List createCancelPacket() {
     ByteData packet = ByteData(8);
     packet.setUint8(0, PACKET_START);
@@ -167,6 +142,32 @@ class RobotCommand {
     ByteData packet = ByteData(8);
     packet.setUint8(0, PACKET_START);
     packet.setUint8(1, EVENT_OFF);
+    packet.setUint8(2, 4); // 데이터 길이 4바이트
+    packet.setUint8(3, 0);
+    packet.setUint8(4, 0);
+    packet.setUint8(5, 0);
+    packet.setUint8(6, 0);
+    packet.setUint8(7, PACKET_END);
+
+    return packet.buffer.asUint8List();
+  }
+
+  static Uint8List createelevateTouchPacket(int x, int y) {
+    ByteData packet = ByteData(8);
+    packet.setUint8(0, PACKET_START);
+    packet.setUint8(1, EVENT_TOUCHELEVATE);
+    packet.setUint8(2, 4); // 데이터 길이 4바이트
+    packet.setUint16(3, x, Endian.big);
+    packet.setUint16(5, y, Endian.big);
+    packet.setUint8(7, PACKET_END);
+
+    return packet.buffer.asUint8List();
+  }
+
+  static Uint8List createPressPacket() {
+    ByteData packet = ByteData(8);
+    packet.setUint8(0, PACKET_START);
+    packet.setUint8(1, EVENT_PRESS);
     packet.setUint8(2, 4); // 데이터 길이 4바이트
     packet.setUint8(3, 0);
     packet.setUint8(4, 0);
@@ -265,7 +266,7 @@ class MessageView {
     Overlay.of(context).insert(overlayEntry);
 
     // 일정 시간 후에 Overlay를 제거합니다.
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    Future.delayed(const Duration(milliseconds: 2000), () {
       overlayEntry.remove();
     });
   }
@@ -433,11 +434,13 @@ class CameraViewModel extends ChangeNotifier {
 
   void togglePlayerState() {
     _isPlayerActive = !_isPlayerActive;
+    GlobalVariables.player.value = !GlobalVariables.player.value;
     notifyListeners();
   }
 
   void offPlayerState() {
     _isPlayerActive = false;
+    GlobalVariables.player.value = false;
     notifyListeners();
   }
 }

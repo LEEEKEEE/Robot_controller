@@ -70,8 +70,12 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
     final viewModel = Provider.of<CameraViewModel>(context, listen: false);
 
     viewModel.updateTouchPosition(localOffset, 'x: $dx, y: $dy');
-
-    tcp.sendMessage(RobotCommand.createTouchPacket(intDataDx, intDataDy));
+    if (GlobalVariables.showContainer) {
+      tcp.sendMessage(RobotCommand.createTouchPacket(intDataDx, intDataDy));
+    } else {
+      tcp.sendMessage(
+          RobotCommand.createelevateTouchPacket(intDataDx, intDataDy));
+    }
   }
 
   @override
@@ -161,7 +165,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
                       })),
             ),
           ),
-          if (viewModel.touchPosition != null)
+    /*      if (viewModel.touchPosition != null)
             Positioned(
               left: viewModel.touchPosition!.dx - 50,
               top: viewModel.touchPosition!.dy - 80,
@@ -176,7 +180,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
-            ),
+            ),*/
         ],
       );
     });

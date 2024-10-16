@@ -63,54 +63,56 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
               ),
             ),
           ),
-          ValueListenableBuilder<MqttConnectionState>(
-              valueListenable: mqtt.connectionState,
-              builder: (context, connectionState, _) {
-                Icon mqttIcon;
-                if (connectionState == MqttConnectionState.connected) {
-                  mqttIcon = Icon(
-                    Icons.settings,
-                    size: sizeHeight * 0.07,
-                  );
-                } else {
-                  mqttIcon = Icon(
-                    Icons.settings_outlined,
-                    size: sizeHeight * 0.07,
-                  );
-                }
+          (GlobalVariables.showContainer
+              ? ValueListenableBuilder<MqttConnectionState>(
+                  valueListenable: mqtt.connectionState,
+                  builder: (context, connectionState, _) {
+                    Icon mqttIcon;
+                    if (connectionState == MqttConnectionState.connected) {
+                      mqttIcon = Icon(
+                        Icons.settings,
+                        size: sizeHeight * 0.07,
+                      );
+                    } else {
+                      mqttIcon = Icon(
+                        Icons.settings_outlined,
+                        size: sizeHeight * 0.07,
+                      );
+                    }
 
-                return GestureDetector(
-                  onTap: () async {
-                    Haptics.vibrate(HapticsType.light);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return const SettingView();
-                      } // SettingView로 이동
-                          ),
-                    );
-                  },
-                  child: Container(
-                    width: (sizeHeight * 0.1),
-                    height: (sizeHeight * 0.1),
-                    margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(sizeHeight * 0.1),
-                      color: const Color(0xFF646667),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x40000000),
-                          offset: Offset(0, 4),
-                          blurRadius: 2,
+                    return GestureDetector(
+                      onTap: () async {
+                        Haptics.vibrate(HapticsType.light);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return const SettingView();
+                          } // SettingView로 이동
+                              ),
+                        );
+                      },
+                      child: Container(
+                        width: (sizeHeight * 0.1),
+                        height: (sizeHeight * 0.1),
+                        margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(sizeHeight * 0.1),
+                          color: const Color(0xFF646667),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x40000000),
+                              offset: Offset(0, 4),
+                              blurRadius: 2,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Center(
-                      child: mqttIcon,
-                    ),
-                  ),
-                );
-              }),
+                        child: Center(
+                          child: mqttIcon,
+                        ),
+                      ),
+                    );
+                  })
+              : Container()),
           GestureDetector(
               onTap: () async {
                 Haptics.vibrate(HapticsType.light);
@@ -156,33 +158,45 @@ class _MenuButtonSectionState extends State<MenuButtonSection> {
             width: (sizeHeight * 0.1),
             height: (sizeHeight * 0.1),
           ),
-          GestureDetector(
-            onTap: () {
-              Provider.of<CameraViewModel>(context, listen: false)
-                  .togglePlayerState();
-            },
-            child: Container(
-              width: (sizeHeight * 0.1),
-              height: (sizeHeight * 0.1),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(sizeHeight * 0.1),
-                color: const Color(0xFF646667),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x40000000),
-                    offset: Offset(0, 4),
-                    blurRadius: 2,
+          (GlobalVariables.showContainer
+              ? Container()
+              : Container(
+                  width: (sizeHeight * 0.1),
+                  height: (sizeHeight * 0.1),
+                  margin: const EdgeInsets.fromLTRB(0, 0, 10, 0))),
+          ValueListenableBuilder<bool>(
+              valueListenable: GlobalVariables.player,
+              builder: (context, player, _) {
+                return GestureDetector(
+                  onTap: () {
+                    Provider.of<CameraViewModel>(context, listen: false)
+                        .togglePlayerState();
+                  },
+                  child: Container(
+                    width: (sizeHeight * 0.1),
+                    height: (sizeHeight * 0.1),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(sizeHeight * 0.1),
+                      color: const Color(0xFF646667),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x40000000),
+                          offset: Offset(0, 4),
+                          blurRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Icon(
+                        GlobalVariables.player.value
+                            ? Icons.videocam
+                            : Icons.videocam_off,
+                        size: sizeHeight * 0.07,
+                      ),
+                    ),
                   ),
-                ],
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.power_settings_new,
-                  size: sizeHeight * 0.07,
-                ),
-              ),
-            ),
-          ),
+                );
+              })
         ],
       ),
     );

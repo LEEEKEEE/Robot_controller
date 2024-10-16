@@ -35,7 +35,7 @@ class _SettingViewState extends State<SettingView> {
     return Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 화면을 가리지 않도록 설정합니다.
         appBar: AppBar(
-          title: const Text('MQTT Concection'),
+          title: const Text('MQTT Connection'),
         ),
         body: Container(
             decoration: const BoxDecoration(
@@ -62,7 +62,7 @@ class _SettingViewState extends State<SettingView> {
                                 height: sizeHeight * 0.1,
                                 alignment: Alignment.centerRight,
                                 child: Text(
-                                  'Broker URI : ',
+                                  'Broker URI : broker.able-ai.kr',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: (sizeWidth * 0.015),
@@ -70,7 +70,7 @@ class _SettingViewState extends State<SettingView> {
                                   ),
                                 ),
                               ),
-                              GestureDetector(
+                              /* GestureDetector(
                                 onTap: () => MessageView.showInputModal(
                                     context, 'Broker URI', URLController),
                                 child: AbsorbPointer(
@@ -102,7 +102,7 @@ class _SettingViewState extends State<SettingView> {
                                     ),
                                   ),
                                 ),
-                              ),
+                              ),*/
                             ],
                           )),
                           Container(
@@ -219,6 +219,34 @@ class _SettingViewState extends State<SettingView> {
                                               })),
                                     ),
                                   ),
+                                  ValueListenableBuilder<MqttConnectionState>(
+                                    valueListenable: mqtt.connectionState,
+                                    builder: (context, connectionState, _) {
+                                      String txt;
+                                      Color statusColor;
+                                      if (connectionState ==
+                                          MqttConnectionState.connected) {
+                                        txt = 'Status OK';
+                                        statusColor = const Color(0xFFF3F3F3);
+                                      } else {
+                                        txt = 'Status Fail';
+                                        statusColor = const Color.fromARGB(
+                                            255, 210, 121, 121);
+                                      }
+
+                                      return Container(
+                                        // width: (Size_Width * 0.3),
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          txt,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: (sizeWidth * 0.02),
+                                              color: statusColor),
+                                        ),
+                                      );
+                                    },
+                                  )
                                 ],
                               ),
                             ),

@@ -78,7 +78,7 @@ class TCPClient {
         print('Connection closed by server.');
         GlobalVariables.isTCPConnected.value = false;
         subscription?.cancel(); // 스트림 구독 취소
-        // 여기서 재연결 시도 로직을 넣을 수 있습니다.
+
         _socket?.destroy(); // 소켓 연결 해제
         SetRxData.armError.value = false;
       }, cancelOnError: true // 에러 발생 시 자동으로 스트림 구독 취소
@@ -116,6 +116,7 @@ class TCPClient {
       if (dataLength > 0) {
         SetRxData.itemName.value =
             utf8.decode(packet.sublist(5, 5 + dataLength));
+        GlobalVariables.addToCart.value = true;
       } else {
         SetRxData.itemName.value = ''; // 데이터 길이가 0일 때 빈 문자열로 설정
       }

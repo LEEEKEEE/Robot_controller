@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'dart:async';
 import 'dart:math';
 import 'package:provider/provider.dart';
+import 'package:robotarm_controller/pressbutton.dart';
 
 import './global.dart';
 import 'menu_button.dart';
@@ -16,6 +17,7 @@ import './camera_view.dart';
 import './item_detail.dart';
 import './pose_view.dart';
 import './command_button.dart';
+import './MqttService.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진의 바인딩을 보장합니다.
@@ -54,6 +56,7 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> with TickerProviderStateMixin {
   final currentDate = DateTime.now(); // 현재 날짜를 가져옵니다.
   late wifiMonitor _wifiMonitor;
+  final MqttService mqtt = MqttService();
 
   @override
   void initState() {
@@ -74,10 +77,13 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
     });
 
     SetRxData.itemExist.addListener(() {
-      MessageView.showOverlayMessage(
-          context, MediaQuery.of(context).size.width, "해당 좌표 상품인식에 실패하였습니다.");
-      SetRxData.itemExist.value = true;
+      if (GlobalVariables.showContainer) {
+        MessageView.showOverlayMessage(
+            context, MediaQuery.of(context).size.width, "해당 좌표 상품인식에 실패하였습니다.");
+        SetRxData.itemExist.value = true;
+      }
     });
+    // mqtt.connect();
   }
 
   @override
@@ -99,6 +105,47 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
       ),
       home: Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 화면을 가리지 않도록 설정합니다.
+        endDrawer: Drawer(
+          child: Builder(
+            builder: (context) => ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                const DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF2A2A2A),
+                  ),
+                  child: Text(
+                    'Mode Selection',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.shopping_cart),
+                  title: const Text('Item Pick'),
+                  onTap: () {
+                    setState(() {
+                      GlobalVariables.showContainer = true;
+                    });
+                    Scaffold.of(context).closeEndDrawer(); // 드로어만 닫습니다.
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.elevator),
+                  title: const Text('Elevater Button Press'),
+                  onTap: () {
+                    setState(() {
+                      GlobalVariables.showContainer = false;
+                    });
+                    Scaffold.of(context).closeEndDrawer(); // 드로어만 닫습니다.
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
         body: Container(
           decoration: const BoxDecoration(
             color: Color(0xFF363535), // 전체 배경 색상 설정
@@ -176,17 +223,23 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
                             CrossAxisAlignment.center, // Column의 자식 위젯을 중앙으로 정렬
                         children: [
                           // 카메라 영상
+
                           command_button(
                             Size_Height: sizeHeight, // 화면 높이 전달
                             Size_Width: sizeWidth, // 화면 너비 전달
                           ),
+
                           CameraView(
                               Size_Height: sizeHeight,
                               Size_Width: sizeWidth), // 화면 높이 전달
                           // 아이템 세부 사항
-                          ItemDetails(
-                              Size_Height: sizeHeight, // 화면 높이 전달
-                              Size_Width: sizeWidth), // 화면 너비 전달
+                          (GlobalVariables.showContainer
+                              ? ItemDetails(
+                                  Size_Height: sizeHeight, // 화면 높이 전달
+                                  Size_Width: sizeWidth)
+                              : PressButton(
+                                  Size_Height: sizeHeight, // 화면 높이 전달
+                                  Size_Width: sizeWidth)) // 화면 너비 전달
                         ],
                       ),
                     ),

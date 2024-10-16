@@ -72,9 +72,9 @@ class _ItemDetailsState extends State<ItemDetails> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ValueListenableBuilder<String>(
-                      valueListenable: SetRxData.itemName,
-                      builder: (context, itemName, child) {
+                  ValueListenableBuilder<bool>(
+                      valueListenable: GlobalVariables.addToCart,
+                      builder: (context, addToCart, child) {
                         return Container(
                           margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                           width: (sizeWidth * 0.15),
@@ -82,7 +82,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: itemName.isNotEmpty
+                            color: addToCart
                                 ? const Color(0xFF646667)
                                 : const Color.fromARGB(255, 67, 69, 70),
                             boxShadow: const [
@@ -94,12 +94,13 @@ class _ItemDetailsState extends State<ItemDetails> {
                             ],
                           ),
                           child: InkWell(
-                            onTap: itemName.isNotEmpty
+                            onTap: addToCart
                                 ? () {
-                                    /*  MessageView.showOverlayMessage(
-                                    context, sizeHeight, "Add to cart버튼 클릭");*/
+                                    MessageView.showOverlayMessage(
+                                        context, sizeHeight, "로봇이 곧 동작합니다.");
                                     tcp.sendMessage(
                                         RobotCommand.createCommandPacket());
+                                    GlobalVariables.addToCart.value = false;
                                   }
                                 : null,
                             child: Container(
@@ -110,7 +111,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: (sizeWidth * 0.025),
-                                    color: itemName.isNotEmpty
+                                    color: addToCart
                                         ? const Color(0xFFFFFFFF)
                                         : const Color.fromARGB(
                                             123, 255, 255, 255)),
